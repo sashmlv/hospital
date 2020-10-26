@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   as-postgres:
-    image: postgres:9-alpine
+    image: postgres:13-alpine
     volumes:
       - $PWD/build/postgres:/var/lib/postgresql/data:rw
     environment:
