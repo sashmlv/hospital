@@ -1,7 +1,9 @@
 {
   "name": "aoamt-test",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "db:up": "docker-compose -f ./build/docker-compose.yml up --detach --build",
+    "db:stop": "docker-compose -f ./build/docker-compose.yml stop"
   },
   "version": "0.0.1",
   "description": "aoamt test",
