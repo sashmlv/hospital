@@ -1,0 +1,327 @@
+openapi: 3.0.3
+info:
+  title: api
+  description: api
+  version: 0.0.1
+servers:
+  - url: http://0.0.0.0:3000
+    description: api
+tags:
+  - name: api
+    description: api
+paths:
+  /roles:
+    get:
+      tags:
+        - api
+      summary: Get roles
+      description: Get roles
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    post:
+      tags:
+        - api
+      summary: Add role
+      description: Add role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /role/{roleId}:
+    get:
+      tags:
+        - api
+      summary: Get role
+      description: Get role
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          description: role id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - api
+      summary: Update role
+      description: Update role
+      parameters:
+        - name: roleId
+          description: role id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - api
+      summary: Remove role
+      description: Remove role
+      parameters:
+        - name: roleId
+          description: role id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /users:
+    get:
+      tags:
+        - api
+      summary: Get roles
+      description: Get roles
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    post:
+      tags:
+        - api
+      summary: Add role
+      description: Add role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /user/{roleId}:
+    get:
+      tags:
+        - api
+      summary: Get role
+      description: Get role
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          description: role id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - api
+      summary: Update role
+      description: Update role
+      parameters:
+        - name: roleId
+          description: role id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - api
+      summary: Remove role
+      description: Remove role
+      parameters:
+        - name: roleId
+          description: role id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /receptions:
+    get:
+      tags:
+        - api
+      summary: Get roles
+      description: Get roles
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    post:
+      tags:
+        - api
+      summary: Add role
+      description: Add role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /reception/{roleId}:
+    get:
+      tags:
+        - api
+      summary: Get role
+      description: Get role
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          description: role id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      tags:
+        - api
+      summary: Update role
+      description: Update role
+      parameters:
+        - name: roleId
+          description: role id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      tags:
+        - api
+      summary: Remove role
+      description: Remove role
+      parameters:
+        - name: roleId
+          description: role id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object

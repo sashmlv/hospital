@@ -5,6 +5,7 @@ const express = require('express'),
   ServiceError = require('./lib/error'),
   config = require('./lib/config'),
   log = require('./lib/logger'),
+  router = require('./lib/router'),
   notFound = new ServiceError({
     message: 'Not found',
     code: 'NOT_FOUND',
@@ -14,6 +15,7 @@ const express = require('express'),
 module.exports = (async _=> {
 
   app.use(express.json());
+  app.use(await router);
 
   /* success */
   app.use((req, res, next) => {
@@ -44,6 +46,8 @@ module.exports = (async _=> {
       data: err.data && (err.data.length === 1) ? err.data[0] : err.data,
       success: false,
     };
+
+    log.error(err);
 
     if (res.headersSent) {
 

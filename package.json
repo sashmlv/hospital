@@ -24,6 +24,7 @@
     "validator": "^13.1.17"
   },
   "devDependencies": {
+    "glob": "^7.1.6",
     "swagger-ui-express": "^4.1.4",
     "yamljs": "^0.3.0"
   }
