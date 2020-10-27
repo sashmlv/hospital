@@ -1,17 +1,19 @@
 {
   "name": "aoamt-test",
-  "scripts": {
-    "start": "node server.js",
-    "db:up": "docker-compose -f ./build/docker-compose.yml up --detach --build",
-    "db:stop": "docker-compose -f ./build/docker-compose.yml stop",
-    "db:down": "docker-compose -f ./build/docker-compose.yml down",
-    "migrate": "node ./migrations"
-  },
   "version": "0.0.1",
   "description": "aoamt test",
   "main": "server.js",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "start": "node server.js",
+    "db:up": "docker-compose -f ./build/docker-compose.yml up --detach --build",
+    "db:stop": "docker-compose -f ./build/docker-compose.yml stop",
+    "db:down": "docker-compose -f ./build/docker-compose.yml down",
+    "migration:up": "node ./migrations/up",
+    "migration:down": "node ./migrations/down",
+    "seed": "node ./seeds"
+  },
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

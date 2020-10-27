@@ -17,5 +17,5 @@ const db = require('../lib/db-sql'),
     directory: dirs,
   });
 
-  log.info(`Migration done: ${ await db.migrate.currentVersion()}`);
+  log.info(`Migration up done: ${ await db.migrate.currentVersion()}`);
 })();

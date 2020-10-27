@@ -1,6 +1,6 @@
 'use strict';
 
-const tableExists = require('../table.exists');
+const tableExists = require('../../modules/table.exists');
 
 exports.up = async function(db) {
 

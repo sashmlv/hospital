@@ -1,6 +1,6 @@
 'use strict';
 
-const tableExists = require('../table.exists');
+const tableExists = require('../../modules/table.exists');
 
 exports.up = async function(db) {
 
@@ -16,7 +16,8 @@ exports.up = async function(db) {
   await db.schema.table('receptions', table => {
 
     table.increments('id');
-    table.integer('user_id').notNullable();
+    table.integer('doctor_id').notNullable();
+    table.integer('patient_id').nullable();
     table.date('date').notNullable();
     table.time('start_time').notNullable();
     table.time('end_time').notNullable();
@@ -24,7 +25,8 @@ exports.up = async function(db) {
 
   await db.schema.table('receptions', table => {
 
-     table.foreign('user_id').references('id').inTable('users');
+    table.foreign('doctor_id').references('id').inTable('users');
+    table.foreign('patient_id').references('id').inTable('users');
   });
 };
 
