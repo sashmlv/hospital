@@ -10,9 +10,6 @@ const {
   log = require('./lib/logger'),
   ServiceError = require('./lib/error');
 
-process.on('unhandledRejection', err => log.error(err))
-  .on('uncaughtException', err => log.error(err));
-
 module.exports = (async _=> {
 
   try {
