@@ -22,5 +22,9 @@
     "pino": "^6.7.0",
     "pino-pretty": "^4.3.0",
     "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "swagger-ui-express": "^4.1.4",
+    "yamljs": "^0.3.0"
   }
 }
