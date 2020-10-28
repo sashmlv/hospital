@@ -22,9 +22,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
     post:
       tags:
         - api
@@ -37,7 +42,7 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                name:
                   type: string
       responses:
         '200':
@@ -45,9 +50,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
   /role/{roleId}:
     get:
       tags:
@@ -63,11 +73,18 @@ paths:
             type: integer
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
     put:
       tags:
         - api
@@ -87,15 +104,22 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                name:
                   type: string
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
     delete:
       tags:
         - api
@@ -103,18 +127,25 @@ paths:
       description: Remove role
       parameters:
         - name: roleId
-          description: role id
           in: path
           required: true
+          description: role id
           schema:
             type: integer
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
   /users:
     get:
       tags:
@@ -325,3 +356,27 @@ paths:
             application/json:
               schema:
                 type: object
+components:
+  schemas:
+    'response':
+      type: object
+      properties:
+        status:
+          type: integer
+        success:
+          type: boolean
+        data:
+          anyOf:
+            - type: object
+            - type: array
+        # message:
+        #   type: string
+        # code:
+        #   type: string
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
