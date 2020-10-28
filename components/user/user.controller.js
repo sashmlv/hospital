@@ -1,6 +1,7 @@
 'use strict';
 
-const rm = require('./user.model');
+const rm = require('./user.model'),
+  ServiceError = require('../../lib/error');
 
 class UserController {
 
@@ -23,6 +24,19 @@ class UserController {
       age,
       phone,
     } = args;
+
+    const key = !roleId && 'roleId' || !firstname && 'firstname' ||
+      !middlename && 'middlename'|| !lastname && 'lastname'||
+      !gender && 'gender' || !age && 'age' || !phone && 'phone';
+
+    if (key) {
+
+      throw new ServiceError({
+        message: `Field required: ${key}`,
+        data: {[key]: args[key]}
+      });
+    }
+
     return {
       id: (await rm.create({
         role_id: roleId,
@@ -54,6 +68,7 @@ class UserController {
       age,
       phone,
     } = args;
+
     return {
       id: (await rm.update({
         id: userId,

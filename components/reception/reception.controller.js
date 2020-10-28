@@ -21,31 +21,37 @@ class ReceptionController {
 
     const {
       doctorId,
-      patientId,
+      patientId = null,
       date,
       startTime,
       endTime,
-    } = args,
-      isTime = startTime && endTime;
+    } = args;
 
-    if (isTime) {
+    const key = !doctorId && 'doctorId' || !date && 'date' || !startTime && 'startTime' || !endTime && 'endTime';
 
-      const diff = duration(
-        moment(moment(new Date(`${date} ${endTime}`)))
-          .diff(new Date(`${date} ${startTime}`)),
-      ).asMinutes();
+    if (key) {
 
-      if (diff !== RECEPTION_DURATION) {
+      throw new ServiceError({
+        message: `Field required: ${key}`,
+        data: {[key]: args[key]}
+      });
+    }
 
-        throw new ServiceError({
-          message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-          data: {
-            startTime,
-            endTime,
-            ...(Number.isInteger(diff) ? {difference: diff} : {}),
-          }
-        });
-      }
+    const diff = duration(
+      moment(moment(new Date(`${date} ${endTime}`)))
+        .diff(new Date(`${date} ${startTime}`)),
+    ).asMinutes();
+
+    if (diff !== RECEPTION_DURATION) {
+
+      throw new ServiceError({
+        message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
+        data: {
+          startTime,
+          endTime,
+          ...(Number.isInteger(diff) ? {difference: diff} : {}),
+        }
+      });
     }
 
     return {
@@ -53,8 +59,8 @@ class ReceptionController {
         doctor_id: doctorId,
         patient_id: patientId,
         date,
-        ...(isTime ? {start_time: startTime} : {}),
-        ...(isTime ? {end_time: endTime} : {}),
+        start_time: startTime,
+        end_time: endTime,
       })).shift()
     };
   }
@@ -76,13 +82,22 @@ class ReceptionController {
   async createOrUpdateReceptionsInterval(args) {
 
     const {
-      method,
       doctorId,
-      patientId,
+      patientId = null,
       date,
       startInterval,
       endInterval,
     } = args;
+
+    const key = !doctorId && 'doctorId' || !date && 'date' || !startInterval && 'startInterval' || !endInterval && 'endInterval';
+
+    if (key) {
+
+      throw new ServiceError({
+        message: `Field required: ${key}`,
+        data: {[key]: args[key]}
+      });
+    }
 
     const diff = duration(
       moment(moment(new Date(`${date} ${endInterval}`)))
@@ -112,7 +127,6 @@ class ReceptionController {
 
     return {
       ids: await rm.createOrUpdateMany({
-        method,
         doctor_id: doctorId,
         patient_id: patientId,
         date,
@@ -129,6 +143,16 @@ class ReceptionController {
       receptionId,
       patientId,
     } = args;
+
+    const key = !receptionId && 'receptionId' || !patientId && 'patientId';
+
+    if (key) {
+
+      throw new ServiceError({
+        message: `Field required: ${key}`,
+        data: {[key]: args[key]}
+      });
+    }
 
     return await rm.updateByPatient({
       id: receptionId,

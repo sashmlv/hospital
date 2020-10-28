@@ -1,6 +1,7 @@
 'use strict';
 
-const rm = require('./role.model');
+const rm = require('./role.model'),
+  ServiceError = require('../../lib/error');
 
 class RoleController {
 
@@ -15,6 +16,15 @@ class RoleController {
   async create(args) {
 
     const {name,} = args;
+
+    if (!name) {
+
+      throw new ServiceError({
+        message: `Field required: name`,
+        data: {name}
+      });
+    }
+
     return {
       id: (await rm.create({name})).shift()
     };
@@ -32,6 +42,17 @@ class RoleController {
       roleId,
       name,
     } = args;
+
+    const key = !roleId && 'roleId' || !name && 'name';
+
+    if (key) {
+
+      throw new ServiceError({
+        message: `Field required: ${key}`,
+        data: {[key]: args[key]}
+      });
+    }
+
     return {
       id: (await rm.update({id: roleId, name,})).shift()
     };
