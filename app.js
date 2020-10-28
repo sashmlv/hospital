@@ -42,7 +42,7 @@ module.exports = (async _=> {
     const response = {
       message: err.message || 'Service error',
       code: err.code || 'SERVICE_ERROR',
-      status: err.status || 400,
+      status: err.status || 500,
       data: err.data && (err.data.length === 1) ? err.data[0] : err.data,
       success: false,
     };
