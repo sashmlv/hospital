@@ -12,17 +12,12 @@ router.get(`/receptions`, async (req, res, next) => {
 
 router.post(`/receptions`, async (req, res, next) => {
 
-  return tryExecute(async _=> res.locals.result = {data: await rc.create(req.body)}, next);
+  return tryExecute(async _=> res.locals.result = {data: await rc.createOrUpdate(req.body)}, next);
 });
 
 router.get(`/reception/:receptionId`, async (req, res, next) => {
 
   return tryExecute(async _=> res.locals.result = {data: await rc.getReception(req.params)}, next);
-});
-
-router.put(`/reception/:receptionId`, async (req, res, next) => {
-
-  return tryExecute(async _=> res.locals.result = {data: await rc.update({...req.params, ...req.body})}, next);
 });
 
 router.delete(`/reception/:receptionId`, async (req, res, next) => {

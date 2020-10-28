@@ -17,54 +17,9 @@ class ReceptionController {
     return await rm.getReceptions({offset: args.offset, limit});
   };
 
-  async create(args) {
+  async createOrUpdate(args) {
 
     const {
-      doctorId,
-      patientId,
-      date,
-      startTime,
-      endTime,
-    } = args;
-
-    const diff = duration(
-      moment(moment(new Date(`${date} ${endTime}`)))
-        .diff(new Date(`${date} ${startTime}`)),
-    ).asMinutes();
-
-    if (diff !== RECEPTION_DURATION) {
-
-      throw new ServiceError({
-        message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-        data: {
-          startTime,
-          endTime,
-          ...(Number.isInteger(diff) ? {difference: diff} : {}),
-        }
-      });
-    }
-
-    return {
-      id: (await rm.create({
-        doctor_id: doctorId,
-        patient_id: patientId,
-        date,
-        start_time: startTime,
-        end_time: endTime,
-      })).shift()
-    };
-  }
-
-  async getReception(args) {
-
-    const {receptionId,} = args;
-    return await rm.getReception({receptionId});
-  }
-
-  async update(args) {
-
-    const {
-      receptionId,
       doctorId,
       patientId,
       date,
@@ -94,8 +49,7 @@ class ReceptionController {
     }
 
     return {
-      id: (await rm.update({
-        id: receptionId,
+      id: (await rm.createOrUpdate({
         doctor_id: doctorId,
         patient_id: patientId,
         date,
@@ -103,6 +57,12 @@ class ReceptionController {
         ...(isTime ? {end_time: endTime} : {}),
       })).shift()
     };
+  }
+
+  async getReception(args) {
+
+    const {receptionId,} = args;
+    return await rm.getReception({receptionId});
   }
 
   async delete(args) {

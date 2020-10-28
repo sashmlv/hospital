@@ -7,7 +7,12 @@ class RoleModel {
   async getRoles(args) {
 
     const {offset, limit,} = args;
-    return await db.select('*').from('roles').limit(limit).offset(offset);
+    return await db
+      .select('*')
+      .from('roles')
+      .orderBy('id')
+      .limit(limit)
+      .offset(offset);
   }
 
   async create(args) {

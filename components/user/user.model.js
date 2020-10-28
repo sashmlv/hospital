@@ -7,7 +7,12 @@ class UserModel {
   async getUsers(args) {
 
     const {offset, limit,} = args;
-    return await db.select('*').from('users').limit(limit).offset(offset);
+    return await db
+      .select('*')
+      .orderBy('id')
+      .from('users')
+      .limit(limit)
+      .offset(offset);
   }
 
   async create(args) {

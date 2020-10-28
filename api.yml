@@ -331,8 +331,8 @@ paths:
     post:
       tags:
         - api
-      summary: Add reception
-      description: Add reception
+      summary: Add/Update reception
+      description: Add/Update reception
       requestBody:
         required: true
         content:
@@ -378,50 +378,6 @@ paths:
           description: reception id
           schema:
             type: integer
-      responses:
-        '200':
-          description: Result
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/response'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/User'
-    put:
-      tags:
-        - api
-      summary: Update reception
-      description: Update reception
-      parameters:
-        - name: receptionId
-          description: reception id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                doctorId:
-                  type: integer
-                patientId:
-                  type: integer
-                date:
-                  type: string
-                  format: date
-                startTime:
-                  type: string
-                endTime:
-                  type: string
       responses:
         '200':
           description: Result
