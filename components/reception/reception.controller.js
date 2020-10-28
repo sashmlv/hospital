@@ -12,8 +12,8 @@ class ReceptionController {
   async getReceptions(args) {
 
     const {limit = 100, page = 1,} = args;
-    args.page = args.page > 0 ? args.page : 1;
-    args.offset = (args.page - 1) * args.limit;
+    args.page = page > 0 ? page : 1;
+    args.offset = (page - 1) * limit;
     return await rm.getReceptions({offset: args.offset, limit});
   };
 
