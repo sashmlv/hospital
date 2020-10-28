@@ -116,9 +116,10 @@ class ReceptionModel {
     const record = (await db.raw(
       `WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL) SELECT * FROM receptions WHERE id = ?`,
       [patient_id, id, id,]
-    )).rows.shift();
+    )).rows.shift(),
+      taken = record && record.patient_id && (record.patient_id !== patient_id);
 
-    if (record && (record.patient_id !== patient_id)) {
+    if (taken) {
 
       throw new ServiceError({
         message: 'Reseption already taken',
@@ -133,6 +134,7 @@ class ReceptionModel {
       });
     }
 
+    record.patient_id = patient_id;
     return [record];
   }
 }
