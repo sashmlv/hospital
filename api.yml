@@ -150,22 +150,27 @@ paths:
     get:
       tags:
         - api
-      summary: Get roles
-      description: Get roles
+      summary: Get users
+      description: Get users
       responses:
         '200':
           description: Result
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
     post:
       tags:
         - api
-      summary: Add role
-      description: Add role
+      summary: Add user
+      description: Add user
       requestBody:
         required: true
         content:
@@ -173,7 +178,20 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                roleId:
+                  type: integer
+                firstname:
+                  type: string
+                middlename:
+                  type: string
+                lastname:
+                  type: string
+                gender:
+                  type: string
+                  enum: [male, female]
+                age:
+                  type: integer
+                phone:
                   type: string
       responses:
         '200':
@@ -181,37 +199,49 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-  /user/{roleId}:
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+  /user/{userId}:
     get:
       tags:
         - api
-      summary: Get role
-      description: Get role
+      summary: Get user
+      description: Get user
       parameters:
-        - name: roleId
+        - name: userId
           in: path
           required: true
-          description: role id
+          description: user id
           schema:
             type: integer
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
     put:
       tags:
         - api
-      summary: Update role
-      description: Update role
+      summary: Update user
+      description: Update user
       parameters:
-        - name: roleId
-          description: role id
+        - name: userId
+          description: user id
           in: path
           required: true
           schema:
@@ -223,54 +253,86 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                roleId:
+                  type: integer
+                firstname:
+                  type: string
+                middlename:
+                  type: string
+                lastname:
+                  type: string
+                gender:
+                  type: string
+                  enum: [male, female]
+                age:
+                  type: integer
+                phone:
                   type: string
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
     delete:
       tags:
         - api
-      summary: Remove role
-      description: Remove role
+      summary: Remove user
+      description: Remove user
       parameters:
-        - name: roleId
-          description: role id
+        - name: userId
+          description: user id
           in: path
           required: true
           schema:
             type: integer
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
   /receptions:
     get:
       tags:
         - api
-      summary: Get roles
-      description: Get roles
+      summary: Get receptions
+      description: Get receptions
       responses:
         '200':
           description: Result
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
     post:
       tags:
         - api
-      summary: Add role
-      description: Add role
+      summary: Add reception
+      description: Add reception
       requestBody:
         required: true
         content:
@@ -278,45 +340,65 @@ paths:
             schema:
               type: object
               properties:
-                username:
-                  type: string
+                doctorId:
+                  type: integer
+                patientId:
+                  type: integer
+                date:
+                  type: date
+                start_time:
+                  type: date-time
+                end_time:
+                  type: date-time
       responses:
         '200':
           description: Result
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-  /reception/{roleId}:
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+  /reception/{receptionId}:
     get:
       tags:
         - api
-      summary: Get role
-      description: Get role
+      summary: Get reception
+      description: Get reception
       parameters:
-        - name: roleId
+        - name: receptionId
           in: path
           required: true
-          description: role id
+          description: reception id
           schema:
             type: integer
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
     put:
       tags:
         - api
-      summary: Update role
-      description: Update role
+      summary: Update reception
+      description: Update reception
       parameters:
-        - name: roleId
-          description: role id
+        - name: receptionId
+          description: reception id
           in: path
           required: true
           schema:
@@ -328,34 +410,56 @@ paths:
             schema:
               type: object
               properties:
-                username:
-                  type: string
+                doctorId:
+                  type: integer
+                patientId:
+                  type: integer
+                date:
+                  type: date
+                start_time:
+                  type: date-time
+                end_time:
+                  type: date-time
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
     delete:
       tags:
         - api
-      summary: Remove role
-      description: Remove role
+      summary: Remove reception
+      description: Remove reception
       parameters:
-        - name: roleId
-          description: role id
+        - name: receptionId
+          description: reception id
           in: path
           required: true
           schema:
             type: integer
       responses:
         '200':
-          description: OK
+          description: Result
           content:
             application/json:
               schema:
-                type: object
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
 components:
   schemas:
     'response':
@@ -369,10 +473,10 @@ components:
           anyOf:
             - type: object
             - type: array
-        # message:
-        #   type: string
-        # code:
-        #   type: string
+        message:
+          type: string
+        code:
+          type: string
     Role:
       type: object
       properties:
@@ -380,3 +484,38 @@ components:
           type: integer
         name:
           type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        role_id:
+          type: integer
+        firstname:
+          type: string
+        middlename:
+          type: string
+        lastname:
+          type: string
+        gender:
+          type: string
+          enum: [male, female]
+        age:
+          type: integer
+        phone:
+          type: string
+    Reception:
+      type: object
+      properties:
+        id:
+          type: integer
+        doctor_id:
+          type: integer
+        patient_id:
+          type: integer
+        date:
+          type: date
+        start_time:
+          type: date-time
+        end_time:
+          type: date-time
