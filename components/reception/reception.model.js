@@ -26,42 +26,21 @@ class ReceptionModel {
       end_time,
     } = args;
 
-    /* remove overlapped intervals */
-    const oldRecords = await db.select('*').from('receptions').where({doctor_id, date,}),
-      remove = [];
-
-    let newRecord = {
+    return await db.raw(`
+WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
+INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUES (?, ?, ?, ?, ?) RETURNING id`,
+      [
+        start_time,
         start_time,
         end_time,
-      },
-      oldRecord,
-      overlap;
-
-    for (let i = 0; i < oldRecords.length; i++) {
-
-      oldRecord = oldRecords[i];
-
-      overlap = newRecord.start_time >= oldRecord.start_time && newRecord.start_time < oldRecord.end_time ||
-        newRecord.end_time > oldRecord.start_time && newRecord.end_time <= oldRecord.end_time;
-
-      if (overlap && !remove.includes(oldRecord.id)) {
-
-        remove.push(oldRecord.id);
-      }
-    }
-
-    if (remove.length) {
-
-      await db('receptions').del().whereIn('id', remove);
-    }
-
-    return await db('receptions').insert({
-      doctor_id,
-      patient_id,
-      date,
-      start_time,
-      end_time,
-    }).returning('id');
+        end_time,
+        doctor_id,
+        patient_id,
+        date,
+        start_time,
+        end_time,
+      ]
+    );
   }
 
   async getReception(args) {
