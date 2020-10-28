@@ -7,15 +7,23 @@ const db = require('../lib/db-sql'),
 
 (async _=> {
 
-  const dirs = readdirSync(__dirname, {withFileTypes: true})
-    .filter(v => v.isDirectory())
-    .map(v => path.resolve(`${__dirname}/${v.name}`));
+  try {
 
-  await db.migrate.latest({
+    const dirs = readdirSync(__dirname, {withFileTypes: true})
+      .filter(v => v.isDirectory())
+      .map(v => path.resolve(`${__dirname}/${v.name}`));
 
-    sortDirsSeparately: true,
-    directory: dirs,
-  });
+    await db.migrate.latest({
 
-  log.info(`Migration up done: ${ await db.migrate.currentVersion()}`);
+      sortDirsSeparately: true,
+      directory: dirs,
+    });
+    log.info(`Migration up done: ${ await db.migrate.currentVersion()}`);
+    process.exit();
+  }
+  catch(err) {
+
+    log.error(err);
+    process.exit(1);
+  }
 })();

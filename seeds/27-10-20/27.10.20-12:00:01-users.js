@@ -4,9 +4,9 @@ const tableExists = require('../../modules/table.exists');
 
 exports.seed = async function(db) {
 
-  const exitsts = await tableExists('users');
+  const exists = await tableExists('users');
 
-  if (!exitsts) {
+  if (!exists) {
 
     return;
   }
