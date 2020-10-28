@@ -15,12 +15,14 @@ class ReceptionModel {
 
     const {
       doctor_id,
+      patient_id,
       date,
       start_time,
       end_time,
     } = args;
     return await db('receptions').insert({
       doctor_id,
+      patient_id,
       date,
       start_time,
       end_time,
@@ -36,24 +38,26 @@ class ReceptionModel {
   async update(args) {
 
     const {
-      receptionId,
+      id,
       doctor_id,
+      patient_id,
       date,
       start_time,
       end_time,
     } = args;
     return await db('receptions').update({
       doctor_id,
+      patient_id,
       date,
       start_time,
       end_time,
-    }).where({id: receptionId}).returning('id');
+    }).where({id}).returning('id');
   }
 
   async delete(args) {
 
-    const {receptionId,} = args;
-    return await db('receptions').del().where({id: receptionId}).returning('id');
+    const {id,} = args;
+    return await db('receptions').del().where({id}).returning('id');
   }
 
   async createOrUpdateMany(args) {
@@ -61,6 +65,7 @@ class ReceptionModel {
     const {
       method,
       doctor_id,
+      patient_id,
       date,
       start_interval,
       end_interval,
@@ -69,6 +74,7 @@ class ReceptionModel {
 
     const newRecords = intervals.map(v => ({
       doctor_id,
+      patient_id,
       date,
       start_time: v.start_time,
       end_time: v.end_time,

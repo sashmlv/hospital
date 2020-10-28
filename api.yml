@@ -345,11 +345,12 @@ paths:
                 patientId:
                   type: integer
                 date:
-                  type: date
-                start_time:
-                  type: date-time
-                end_time:
-                  type: date-time
+                  type: string
+                  format: date
+                startTime:
+                  type: string
+                endTime:
+                  type: string
       responses:
         '200':
           description: Result
@@ -415,11 +416,12 @@ paths:
                 patientId:
                   type: integer
                 date:
-                  type: date
-                start_time:
-                  type: date-time
-                end_time:
-                  type: date-time
+                  type: string
+                  format: date
+                startTime:
+                  type: string
+                endTime:
+                  type: string
       responses:
         '200':
           description: Result
@@ -516,6 +518,6 @@ components:
         date:
           type: date
         start_time:
-          type: date-time
+          type: string
         end_time:
-          type: date-time
+          type: string

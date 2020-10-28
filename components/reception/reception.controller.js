@@ -21,6 +21,7 @@ class ReceptionController {
 
     const {
       doctorId,
+      patientId,
       date,
       startTime,
       endTime,
@@ -35,13 +36,18 @@ class ReceptionController {
 
       throw new ServiceError({
         message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-        data: {startTime, endTime, difference: diff,}
+        data: {
+          startTime,
+          endTime,
+          ...(Number.isInteger(diff) ? {difference: diff} : {}),
+        }
       });
     }
 
     return {
       id: (await rm.create({
         doctor_id: doctorId,
+        patient_id: patientId,
         date,
         start_time: startTime,
         end_time: endTime,
@@ -60,31 +66,41 @@ class ReceptionController {
     const {
       receptionId,
       doctorId,
+      patientId,
       date,
       startTime,
       endTime,
-    } = args;
+    } = args,
+      isTime = startTime && endTime;
 
-    const diff = duration(
-      moment(moment(new Date(`${date} ${endTime}`)))
-        .diff(new Date(`${date} ${startTime}`)),
-    ).asMinutes();
+    if (isTime) {
 
-    if (diff !== RECEPTION_DURATION) {
+      const diff = duration(
+        moment(moment(new Date(`${date} ${endTime}`)))
+          .diff(new Date(`${date} ${startTime}`)),
+      ).asMinutes();
 
-      throw new ServiceError({
-        message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-        data: {startTime, endTime, difference: diff,}
-      });
+      if (diff !== RECEPTION_DURATION) {
+
+        throw new ServiceError({
+          message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
+          data: {
+            startTime,
+            endTime,
+            ...(Number.isInteger(diff) ? {difference: diff} : {}),
+          }
+        });
+      }
     }
 
     return {
       id: (await rm.update({
-        reception_id: receptionId,
+        id: receptionId,
         doctor_id: doctorId,
+        patient_id: patientId,
         date,
-        start_time: startTime,
-        end_time: endTime,
+        ...(isTime ? {start_time: startTime} : {}),
+        ...(isTime ? {end_time: endTime} : {}),
       })).shift()
     };
   }
@@ -93,7 +109,7 @@ class ReceptionController {
 
     const {receptionId,} = args;
     return {
-      id: (await rm.delete({receptionId})).shift()
+      id: (await rm.delete({id: receptionId})).shift()
     };
   }
 
@@ -102,6 +118,7 @@ class ReceptionController {
     const {
       method,
       doctorId,
+      patientId,
       date,
       startInterval,
       endInterval,
@@ -137,6 +154,7 @@ class ReceptionController {
       ids: await rm.createOrUpdateMany({
         method,
         doctor_id: doctorId,
+        patient_id: patientId,
         date,
         start_interval: startInterval,
         end_interval: endInterval,
