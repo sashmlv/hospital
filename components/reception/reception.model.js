@@ -20,7 +20,7 @@ class ReceptionModel {
 
     const {
       doctor_id,
-      patient_id,
+      patient_id = null,
       date,
       start_time,
       end_time,
