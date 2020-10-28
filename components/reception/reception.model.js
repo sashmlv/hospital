@@ -100,10 +100,8 @@ class ReceptionModel {
           }
         }
       }
-
       await db('receptions').del().whereIn('id', remove);
     }
-
     return await db('receptions').insert(newRecords).returning('id');
   }
 }

@@ -18,20 +18,20 @@ class RoleModel {
 
   async getRole(args) {
 
-    const {roleId,} = args;
-    return await db.select('*').from('roles').where({id: roleId});
+    const {id,} = args;
+    return await db.select('*').from('roles').where({id});
   }
 
   async update(args) {
 
-    const {roleId, name,} = args;
-    return await db('roles').update({name,}).where({id: roleId}).returning('id');
+    const {id, name,} = args;
+    return await db('roles').update({name,}).where({id}).returning('id');
   }
 
   async delete(args) {
 
-    const {roleId,} = args;
-    return await db('roles').del().where({id: roleId}).returning('id');
+    const {id,} = args;
+    return await db('roles').del().where({id}).returning('id');
   }
 }
 

@@ -23,7 +23,7 @@ class RoleController {
   async getRole(args) {
 
     const {roleId,} = args;
-    return await rm.getRole({roleId});
+    return await rm.getRole({id: roleId});
   }
 
   async update(args) {
@@ -33,7 +33,7 @@ class RoleController {
       name,
     } = args;
     return {
-      id: (await rm.update({roleId, name,})).shift()
+      id: (await rm.update({id: roleId, name,})).shift()
     };
   }
 
@@ -41,7 +41,7 @@ class RoleController {
 
     const {roleId,} = args;
     return {
-      id: (await rm.delete({roleId})).shift()
+      id: (await rm.delete({id: roleId})).shift()
     };
   }
 }

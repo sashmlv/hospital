@@ -34,14 +34,14 @@ class UserModel {
 
   async getUser(args) {
 
-    const {userId,} = args;
-    return await db.select('*').from('users').where({id: userId});
+    const {id,} = args;
+    return await db.select('*').from('users').where({id});
   }
 
   async update(args) {
 
     const {
-      userId,
+      id,
       role_id,
       firstname,
       middlename,
@@ -58,13 +58,13 @@ class UserModel {
       gender,
       age,
       phone,
-    }).where({id: userId}).returning('id');
+    }).where({id}).returning('id');
   }
 
   async delete(args) {
 
-    const {userId,} = args;
-    return await db('users').del().where({id: userId}).returning('id');
+    const {id,} = args;
+    return await db('users').del().where({id}).returning('id');
   }
 }
 

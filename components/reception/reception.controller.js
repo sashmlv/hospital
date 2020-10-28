@@ -20,31 +20,31 @@ class ReceptionController {
   async create(args) {
 
     const {
-      doctor_id,
+      doctorId,
       date,
-      start_time,
-      end_time,
+      startTime,
+      endTime,
     } = args;
 
     const diff = duration(
-      moment(moment(new Date(`${date} ${end_time}`)))
-        .diff(new Date(`${date} ${start_time}`)),
+      moment(moment(new Date(`${date} ${endTime}`)))
+        .diff(new Date(`${date} ${startTime}`)),
     ).asMinutes();
 
     if (diff !== RECEPTION_DURATION) {
 
       throw new ServiceError({
         message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-        data: {start_time, end_time, difference: diff,}
+        data: {startTime, endTime, difference: diff,}
       });
     }
 
     return {
       id: (await rm.create({
-        doctor_id,
+        doctor_id: doctorId,
         date,
-        start_time,
-        end_time,
+        start_time: startTime,
+        end_time: endTime,
       })).shift()
     };
   }
@@ -59,32 +59,32 @@ class ReceptionController {
 
     const {
       receptionId,
-      doctor_id,
+      doctorId,
       date,
-      start_time,
-      end_time,
+      startTime,
+      endTime,
     } = args;
 
     const diff = duration(
-      moment(moment(new Date(`${date} ${end_time}`)))
-        .diff(new Date(`${date} ${start_time}`)),
+      moment(moment(new Date(`${date} ${endTime}`)))
+        .diff(new Date(`${date} ${startTime}`)),
     ).asMinutes();
 
     if (diff !== RECEPTION_DURATION) {
 
       throw new ServiceError({
         message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-        data: {start_time, end_time, difference: diff,}
+        data: {startTime, endTime, difference: diff,}
       });
     }
 
     return {
       id: (await rm.update({
-        receptionId,
-        doctor_id,
+        reception_id: receptionId,
+        doctor_id: doctorId,
         date,
-        start_time,
-        end_time,
+        start_time: startTime,
+        end_time: endTime,
       })).shift()
     };
   }
@@ -101,29 +101,29 @@ class ReceptionController {
 
     const {
       method,
-      doctor_id,
+      doctorId,
       date,
-      start_interval,
-      end_interval,
+      startInterval,
+      endInterval,
     } = args;
 
     const diff = duration(
-      moment(moment(new Date(`${date} ${end_interval}`)))
-        .diff(new Date(`${date} ${start_interval}`)),
+      moment(moment(new Date(`${date} ${endInterval}`)))
+        .diff(new Date(`${date} ${startInterval}`)),
     ).asMinutes();
 
     if (diff % RECEPTION_DURATION !== 0) {
 
       throw new ServiceError({
         message: 'Please provide reseptions interval, which can be divided by reception duration: ' + RECEPTION_DURATION,
-        data: {start_interval, end_interval,}
+        data: {startInterval, endInterval,}
       });
     }
 
     const intervals = [];
 
-    let start = moment(new Date(`${date} ${start_interval}`)),
-      end = moment(new Date(`${date} ${end_interval}`));
+    let start = moment(new Date(`${date} ${startInterval}`)),
+      end = moment(new Date(`${date} ${endInterval}`));
 
     while(start < end) {
 
@@ -136,13 +136,23 @@ class ReceptionController {
     return {
       ids: await rm.createOrUpdateMany({
         method,
-        doctor_id,
+        doctor_id: doctorId,
         date,
-        start_interval,
-        end_interval,
+        start_interval: startInterval,
+        end_interval: endInterval,
         intervals,
       })
     };
+  }
+
+  async receptionTake(args) {
+
+    const {
+      doctorId,
+      patientId,
+      receptionId,
+    } = args;
+
   }
 }
 

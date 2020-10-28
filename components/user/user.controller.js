@@ -15,7 +15,7 @@ class UserController {
   async create(args) {
 
     const {
-      role_id,
+      roleId,
       firstname,
       middlename,
       lastname,
@@ -25,7 +25,7 @@ class UserController {
     } = args;
     return {
       id: (await rm.create({
-        role_id,
+        role_id: roleId,
         firstname,
         middlename,
         lastname,
@@ -39,14 +39,14 @@ class UserController {
   async getUser(args) {
 
     const {userId,} = args;
-    return await rm.getUser({userId});
+    return await rm.getUser({id: userId});
   }
 
   async update(args) {
 
     const {
       userId,
-      role_id,
+      roleId,
       firstname,
       middlename,
       lastname,
@@ -56,8 +56,8 @@ class UserController {
     } = args;
     return {
       id: (await rm.update({
-        userId,
-        role_id,
+        id: userId,
+        role_id: roleId,
         firstname,
         middlename,
         lastname,
@@ -72,7 +72,7 @@ class UserController {
 
     const {userId,} = args;
     return {
-      id: (await rm.delete({userId})).shift()
+      id: (await rm.delete({id: userId})).shift()
     };
   }
 }
