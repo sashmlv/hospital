@@ -22,7 +22,7 @@ module.exports = (async _=> {
     server.listen(
       PORT,
       HOST,
-      _=> log.info( `Server listening: ${HOST}:${PORT}, NODE_ENV: ${NODE_ENV}`)
+      _=> log.info( `Server listening: http://${HOST}:${PORT}, NODE_ENV: ${NODE_ENV}`)
     );
 
     return server;
