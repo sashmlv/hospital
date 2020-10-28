@@ -60,7 +60,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
     const {
       method,
       doctor_id,
-      patient_id,
+      patient_id = null,
       date,
       start_interval,
       end_interval,
@@ -75,38 +75,16 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       end_time: v.end_time,
     }));
 
-    let result;
-
-    /* remove overlapped intervals */
-    const oldRecords = await db.select('*').from('receptions').where({doctor_id, date,}),
-      remove = [];
-
-    let newRecord, oldRecord, overlap;
-
-    for (let i = 0; i < oldRecords.length; i++) {
-
-      oldRecord = oldRecords[i];
-
-      for (let j = 0; j < newRecords.length; j++) {
-
-        newRecord = newRecords[j];
-
-        overlap = newRecord.start_time >= oldRecord.start_time && newRecord.start_time < oldRecord.end_time ||
-          newRecord.end_time > oldRecord.start_time && newRecord.end_time <= oldRecord.end_time;
-
-        if (overlap && !remove.includes(oldRecord.id)) {
-
-          remove.push(oldRecord.id);
-        }
-      }
-    }
-
-    if (remove.length) {
-
-      await db('receptions').del().whereIn('id', remove);
-    }
-
-    return await db('receptions').insert(newRecords).returning('id');
+    return (await db.raw(`
+WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
+${db('receptions').insert(newRecords).returning('id').toString()}`,
+      [
+        start_interval,
+        start_interval,
+        end_interval,
+        end_interval,
+      ]
+    )).rows;
   }
 
   async updateByPatient(args) {
