@@ -82,33 +82,35 @@ class ReceptionModel {
 
     let result;
 
-    if (method === 'PUT') { // update
+    /* remove overlapped intervals */
+    const oldRecords = await db.select('*').from('receptions').where({doctor_id, date,}),
+      remove = [];
 
-      /* remove overlapped intervals */
-      const oldRecords = await db.select('*').from('receptions').where({doctor_id, date,}),
-        remove = [];
+    let newRecord, oldRecord, overlap;
 
-      let newRecord, oldRecord, overlap;
+    for (let i = 0; i < oldRecords.length; i++) {
 
-      for (let i = 0; i < oldRecords.length; i++) {
+      oldRecord = oldRecords[i];
 
-        oldRecord = oldRecords[i];
+      for (let j = 0; j < newRecords.length; j++) {
 
-        for (let j = 0; j < newRecords.length; j++) {
+        newRecord = newRecords[j];
 
-          newRecord = newRecords[j];
+        overlap = newRecord.start_time >= oldRecord.start_time && newRecord.start_time < oldRecord.end_time ||
+          newRecord.end_time > oldRecord.start_time && newRecord.end_time <= oldRecord.end_time;
 
-          overlap = newRecord.start_time >= oldRecord.start_time && newRecord.start_time < oldRecord.end_time ||
-            newRecord.end_time > oldRecord.start_time && newRecord.end_time <= oldRecord.end_time;
+        if (overlap && !remove.includes(oldRecord.id)) {
 
-          if (overlap && !remove.includes(oldRecord.id)) {
-
-            remove.push(oldRecord.id);
-          }
+          remove.push(oldRecord.id);
         }
       }
+    }
+
+    if (remove.length) {
+
       await db('receptions').del().whereIn('id', remove);
     }
+
     return await db('receptions').insert(newRecords).returning('id');
   }
 

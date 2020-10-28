@@ -462,6 +462,80 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/User'
+  /receptions/interval:
+    post:
+      tags:
+        - api
+      summary: Add/Update receptions interval
+      description: Add/Update receptions interval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                doctorId:
+                  type: integer
+                patientId:
+                  type: integer
+                date:
+                  type: string
+                  format: date
+                startInterval:
+                  type: string
+                endInterval:
+                  type: string
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Reception'
+  /reception/take/{receptionId}:
+    put:
+      tags:
+        - api
+      summary: Take reception
+      description: Take reception
+      parameters:
+        - name: receptionId
+          description: reception id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patientId:
+                  type: integer
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Reception'
 components:
   schemas:
     'response':
@@ -516,7 +590,8 @@ components:
         patient_id:
           type: integer
         date:
-          type: date
+          type: string
+          format: date
         start_time:
           type: string
         end_time:
