@@ -26,7 +26,7 @@ class ReceptionModel {
       end_time,
     } = args;
 
-    return await db.raw(`
+    return (await db.raw(`
 WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
 INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUES (?, ?, ?, ?, ?) RETURNING id`,
       [
@@ -40,7 +40,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
         start_time,
         end_time,
       ]
-    );
+    )).rows;
   }
 
   async getReception(args) {
