@@ -148,11 +148,14 @@ class ReceptionController {
   async receptionTake(args) {
 
     const {
-      doctorId,
-      patientId,
       receptionId,
+      patientId,
     } = args;
 
+    return await rm.updateByPatient({
+      id: receptionId,
+      patient_id: patientId,
+    });
   }
 }
 

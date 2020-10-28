@@ -47,9 +47,9 @@ router.put(`/receptions-interval`, async (req, res, next) => {
 });
 
 /* Take reception by patient */
-router.post(`/reception-take`, async (req, res, next) => {
+router.put(`/reception-take/:receptionId`, async (req, res, next) => {
 
-  return tryExecute(async _=> res.locals.result = {data: await rc.receptionTake(req.body)}, next);
+  return tryExecute(async _=> res.locals.result = {data: await rc.receptionTake({...req.params, ...req.body})}, next);
 });
 
 module.exports = router;

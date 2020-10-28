@@ -1,6 +1,7 @@
 'use strict';
 
-const db = require('../../lib/db-sql');
+const db = require('../../lib/db-sql'),
+  ServiceError = require('../../lib/error');
 
 class ReceptionModel {
 
@@ -103,6 +104,36 @@ class ReceptionModel {
       await db('receptions').del().whereIn('id', remove);
     }
     return await db('receptions').insert(newRecords).returning('id');
+  }
+
+  async updateByPatient(args) {
+
+    const {
+      id,
+      patient_id,
+    } = args;
+
+    const record = (await db.raw(
+      `WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL) SELECT * FROM receptions WHERE id = ?`,
+      [patient_id, id, id,]
+    )).rows.shift();
+
+    if (record && (record.patient_id !== patient_id)) {
+
+      throw new ServiceError({
+        message: 'Reseption already taken',
+        data: {id: record.id}
+      });
+    }
+    else if (!record) {
+
+      throw new ServiceError({
+        message: 'Reseption not found',
+        data: {id}
+      });
+    }
+
+    return [record];
   }
 }
 
