@@ -30,4 +30,26 @@ router.delete(`/reception/:receptionId`, async (req, res, next) => {
   return tryExecute(async _=> res.locals.result = {data: await rc.delete(req.params)}, next);
 });
 
+/* Add receptions interval */
+router.post(`/receptions-interval`, async (req, res, next) => {
+
+  return tryExecute(async _=> res.locals.result = {
+    data: await rc.createOrUpdateReceptionsInterval({...req.body, method: req.method})
+  }, next);
+});
+
+/* Update receptions interval */
+router.put(`/receptions-interval`, async (req, res, next) => {
+
+  return tryExecute(async _=> res.locals.result = {
+    data: await rc.createOrUpdateReceptionsInterval({...req.body, method: req.method})
+  }, next);
+});
+
+/* Take reception by patient */
+router.post(`/reception-take`, async (req, res, next) => {
+
+  return tryExecute(async _=> res.locals.result = {data: await rc.receptionTake(req.body)}, next);
+});
+
 module.exports = router;

@@ -54,6 +54,58 @@ class ReceptionModel {
     const {receptionId,} = args;
     return await db('receptions').del().where({id: receptionId}).returning('id');
   }
+
+  async createOrUpdateMany(args) {
+
+    const {
+      method,
+      doctor_id,
+      date,
+      start_interval,
+      end_interval,
+      intervals,
+    } = args;
+
+    const newRecords = intervals.map(v => ({
+      doctor_id,
+      date,
+      start_time: v.start_time,
+      end_time: v.end_time,
+    }));
+
+    let result;
+
+    if (method === 'PUT') { // update
+
+      /* remove overlapped intervals */
+      const oldRecords = await db.select('*').from('receptions').where({doctor_id, date,}),
+        remove = [];
+
+      let newRecord, oldRecord, overlap;
+
+      for (let i = 0; i < oldRecords.length; i++) {
+
+        oldRecord = oldRecords[i];
+
+        for (let j = 0; j < newRecords.length; j++) {
+
+          newRecord = newRecords[j];
+
+          overlap = newRecord.start_time >= oldRecord.start_time && newRecord.start_time < oldRecord.end_time ||
+            newRecord.end_time > oldRecord.start_time && newRecord.end_time <= oldRecord.end_time;
+
+          if (overlap && !remove.includes(oldRecord.id)) {
+
+            remove.push(oldRecord.id);
+          }
+        }
+      }
+
+      await db('receptions').del().whereIn('id', remove);
+    }
+
+    return await db('receptions').insert(newRecords).returning('id');
+  }
 }
 
 module.exports = new ReceptionModel();

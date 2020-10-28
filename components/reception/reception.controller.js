@@ -1,6 +1,11 @@
 'use strict';
 
-const rm = require('./reception.model');
+const rm = require('./reception.model'),
+  moment = require('moment'),
+  {duration} = moment,
+  ServiceError = require('../../lib/error'),
+  {APP} = require('../../lib/config'),
+  {RECEPTION_DURATION} = APP;
 
 class ReceptionController {
 
@@ -20,6 +25,19 @@ class ReceptionController {
       start_time,
       end_time,
     } = args;
+
+    const diff = duration(
+      moment(moment(new Date(`${date} ${end_time}`)))
+        .diff(new Date(`${date} ${start_time}`)),
+    ).asMinutes();
+
+    if (diff !== RECEPTION_DURATION) {
+
+      throw new ServiceError({
+        message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
+        data: {start_time, end_time, difference: diff,}
+      });
+    }
 
     return {
       id: (await rm.create({
@@ -46,6 +64,20 @@ class ReceptionController {
       start_time,
       end_time,
     } = args;
+
+    const diff = duration(
+      moment(moment(new Date(`${date} ${end_time}`)))
+        .diff(new Date(`${date} ${start_time}`)),
+    ).asMinutes();
+
+    if (diff !== RECEPTION_DURATION) {
+
+      throw new ServiceError({
+        message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
+        data: {start_time, end_time, difference: diff,}
+      });
+    }
+
     return {
       id: (await rm.update({
         receptionId,
@@ -62,6 +94,54 @@ class ReceptionController {
     const {receptionId,} = args;
     return {
       id: (await rm.delete({receptionId})).shift()
+    };
+  }
+
+  async createOrUpdateReceptionsInterval(args) {
+
+    const {
+      method,
+      doctor_id,
+      date,
+      start_interval,
+      end_interval,
+    } = args;
+
+    const diff = duration(
+      moment(moment(new Date(`${date} ${end_interval}`)))
+        .diff(new Date(`${date} ${start_interval}`)),
+    ).asMinutes();
+
+    if (diff % RECEPTION_DURATION !== 0) {
+
+      throw new ServiceError({
+        message: 'Please provide reseptions interval, which can be divided by reception duration: ' + RECEPTION_DURATION,
+        data: {start_interval, end_interval,}
+      });
+    }
+
+    const intervals = [];
+
+    let start = moment(new Date(`${date} ${start_interval}`)),
+      end = moment(new Date(`${date} ${end_interval}`));
+
+    while(start < end) {
+
+      intervals.push({
+        start_time: start.format('HH:mm:ss'),
+        end_time: (start = start.add(RECEPTION_DURATION, 'minutes')).format('HH:mm:ss'),
+      });
+    }
+
+    return {
+      ids: await rm.createOrUpdateMany({
+        method,
+        doctor_id,
+        date,
+        start_interval,
+        end_interval,
+        intervals,
+      })
     };
   }
 }
