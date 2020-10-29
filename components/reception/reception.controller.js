@@ -4,6 +4,7 @@ const rm = require('./reception.model'),
   moment = require('moment'),
   {duration} = moment,
   ServiceError = require('../../lib/error'),
+  {validate} = require('../../modules/validate'),
   {APP} = require('../../lib/config'),
   {RECEPTION_DURATION} = APP;
 
@@ -11,13 +12,18 @@ class ReceptionController {
 
   async getReceptions(args) {
 
+    validate('reception', args, 'page', 'limit',);
+
     const {limit = 100, page = 1,} = args;
+
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
     return await rm.getReceptions({offset: args.offset, limit});
   };
 
   async createOrUpdate(args) {
+
+    validate('reception', args, 'doctorId,', 'date,', 'startTime', 'endTime',);
 
     const {
       doctorId,
@@ -26,16 +32,6 @@ class ReceptionController {
       startTime,
       endTime,
     } = args;
-
-    const key = !doctorId && 'doctorId' || !date && 'date' || !startTime && 'startTime' || !endTime && 'endTime';
-
-    if (key) {
-
-      throw new ServiceError({
-        message: `Field required: ${key}`,
-        data: {[key]: args[key]}
-      });
-    }
 
     const diff = duration(
       moment(moment(new Date(`${date} ${endTime}`)))
@@ -67,19 +63,27 @@ class ReceptionController {
 
   async getReception(args) {
 
+    validate('reception', args, 'receptionId',);
+
     const {receptionId,} = args;
+
     return await rm.getReception({receptionId});
   }
 
   async delete(args) {
 
+    validate('reception', args, 'receptionId',);
+
     const {receptionId,} = args;
+
     return {
       id: (await rm.delete({id: receptionId})).shift()
     };
   }
 
   async createOrUpdateReceptionsInterval(args) {
+
+    validate('reception', args, 'doctorId', 'date', 'startInterval', 'endInterval',);
 
     const {
       doctorId,
@@ -88,16 +92,6 @@ class ReceptionController {
       startInterval,
       endInterval,
     } = args;
-
-    const key = !doctorId && 'doctorId' || !date && 'date' || !startInterval && 'startInterval' || !endInterval && 'endInterval';
-
-    if (key) {
-
-      throw new ServiceError({
-        message: `Field required: ${key}`,
-        data: {[key]: args[key]}
-      });
-    }
 
     const diff = duration(
       moment(moment(new Date(`${date} ${endInterval}`)))
@@ -139,20 +133,12 @@ class ReceptionController {
 
   async receptionTake(args) {
 
+    validate('reception', args, 'receptionId', 'patientId',);
+
     const {
       receptionId,
       patientId,
     } = args;
-
-    const key = !receptionId && 'receptionId' || !patientId && 'patientId';
-
-    if (key) {
-
-      throw new ServiceError({
-        message: `Field required: ${key}`,
-        data: {[key]: args[key]}
-      });
-    }
 
     return await rm.updateByPatient({
       id: receptionId,
