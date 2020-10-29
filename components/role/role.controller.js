@@ -1,13 +1,13 @@
 'use strict';
 
 const rm = require('./role.model'),
-  {sanitize} = require('../../modules/sanitize');
+  {sanitize} = require('../../modules/sanitizer');
 
 class RoleController {
 
   async getRoles(args) {
 
-    validate('role', args, 'page', 'limit',);
+    args = sanitize('role', args, 'page', 'limit',);
 
     const {limit = 100, page = 1,} = args;
 
@@ -18,7 +18,7 @@ class RoleController {
 
   async create(args) {
 
-    validate('role', args, 'name',);
+    args = sanitize('role', args, 'name',);
 
     const {name,} = args;
 
@@ -29,7 +29,7 @@ class RoleController {
 
   async getRole(args) {
 
-    validate('role', args, 'roleId',);
+    args = sanitize('role', args, 'roleId',);
 
     const {roleId,} = args;
 
@@ -38,7 +38,7 @@ class RoleController {
 
   async update(args) {
 
-    validate('role', args, 'roleId', 'name',);
+    args = sanitize('role', args, 'roleId', 'name',);
 
     const {
       roleId,
@@ -52,7 +52,7 @@ class RoleController {
 
   async delete(args) {
 
-    validate('role', args, 'roleId',);
+    args = sanitize('role', args, 'roleId',);
 
     const {roleId,} = args;
 

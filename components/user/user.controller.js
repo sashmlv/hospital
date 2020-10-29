@@ -2,13 +2,13 @@
 
 const rm = require('./user.model'),
   ServiceError = require('../../lib/error'),
-  {validate} = require('../../modules/validate');
+  {sanitize} = require('../../modules/sanitizer');
 
 class UserController {
 
   async getUsers(args) {
 
-    validate('user', args, 'limit', 'page',);
+    args = sanitize('user', args, 'limit', 'page',);
 
     const {limit = 100, page = 1,} = args;
 
@@ -19,7 +19,7 @@ class UserController {
 
   async create(args) {
 
-    validate('user', args, 'roleId', 'firstname', 'middlename', 'lastname', 'gender', 'age', 'phone',);
+    args = sanitize('user', args, 'roleId', 'firstname', 'middlename', 'lastname', 'gender', 'age', 'phone',);
 
     const {
       roleId,
@@ -46,7 +46,7 @@ class UserController {
 
   async getUser(args) {
 
-    validate('user', args, 'userId',);
+    args = sanitize('user', args, 'userId',);
 
     const {userId,} = args;
 
@@ -55,7 +55,7 @@ class UserController {
 
   async update(args) {
 
-    validate('user', args, 'userId',);
+    args = sanitize('user', args, 'userId',);
 
     const {
       userId,
@@ -84,7 +84,7 @@ class UserController {
 
   async delete(args) {
 
-    validate('user', args, 'userId',);
+    args = sanitize('user', args, 'userId',);
 
     const {userId,} = args;
 
