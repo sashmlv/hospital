@@ -75,16 +75,14 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       end_time: v.end_time,
     }));
 
-    return (await db.raw(`
-WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
-${db('receptions').insert(newRecords).returning('id').toString()}`,
+    return await db.with('cte', db.raw('DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
       [
         start_interval,
         start_interval,
         end_interval,
         end_interval,
-      ]
-    )).rows;
+      ])
+    ).insert(newRecords).into('receptions').returning('id');
   }
 
   async updateByPatient(args) {
@@ -95,7 +93,7 @@ ${db('receptions').insert(newRecords).returning('id').toString()}`,
     } = args;
 
     const record = (await db.raw(
-      `WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL) SELECT * FROM receptions WHERE id = ?`,
+      'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL) SELECT * FROM receptions WHERE id = ?',
       [patient_id, id, id,]
     )).rows.shift(),
       taken = record && record.patient_id && (record.patient_id !== patient_id);
