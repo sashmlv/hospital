@@ -27,24 +27,23 @@ function sanitize(model, data, ...required) {
   }
 
   const strData = stringify(data),
-    keys = Object.keys(strData);
+    keys = Object.keys(strData),
+    emptyKey = required.find(key => !keys.includes(key) || strData[key] === 'undefined' || strData[key] === undefined);
 
-  let key, val, empty, valid;
+  let key, val, valid;
+
+  if (emptyKey) {
+
+    throw new ServiceError({
+      message: 'Field required: ' + emptyKey,
+      data: {[emptyKey]: data[emptyKey]},
+    });
+  }
 
   for (let i = 0; i < keys.length; i++) {
 
     key = keys[i];
     val = strData[key];
-
-    empty = required && required.includes(key) && (val === 'undefined' || val === undefined);
-
-    if (empty) {
-
-      throw new ServiceError({
-        message: 'Field required: ' + key,
-        data: {[key]: val},
-      });
-    }
 
     if (!sanitizers[model][key]) {
 
