@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node server.js",
     "db:up": "docker-compose -f ./build/docker-compose.yml up --detach --build",
+    "db:start": "docker-compose -f ./build/docker-compose.yml start",
     "db:stop": "docker-compose -f ./build/docker-compose.yml stop",
     "db:down": "docker-compose -f ./build/docker-compose.yml down",
     "migration:up": "node ./migrations/up",
