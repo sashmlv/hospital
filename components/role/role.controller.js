@@ -7,7 +7,7 @@ class RoleController {
 
   async getRoles(args) {
 
-    args = sanitize('role', args, 'page', 'limit',);
+    args = sanitize('role', args,);
 
     const {limit = 100, page = 1,} = args;
 

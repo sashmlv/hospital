@@ -49,7 +49,7 @@ function sanitize(model, data, ...required) {
 
       throw new ServiceError({
         message: 'Field is not allowed: ' + key,
-        data: {[key]: val},
+        data: {[key]: data[key]},
       });
     }
 
@@ -61,7 +61,7 @@ function sanitize(model, data, ...required) {
 
         throw new ServiceError({
           message: 'Field not valid: ' + key,
-          data: {[key]: val},
+          data: {[key]: data[key]},
         });
       }
     }

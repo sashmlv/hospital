@@ -113,7 +113,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       });
     }
 
-    record.patient_id = patient_id;
+    record.patient_id = +patient_id;
     return [record];
   }
 }

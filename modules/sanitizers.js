@@ -22,7 +22,7 @@ const sanitizers = {
       validate: v => isInt(v),
     },
     name: {
-      validate: v => isLength(v, {min:0, max: 50}),
+      validate: v => isLength(v, {min: 1, max: 50}),
       sanitize: escape,
     },
   },
@@ -51,6 +51,12 @@ const sanitizers = {
     endTime: {
       validate: v => time.test(v),
     },
+    startInterval: {
+      validate: v => time.test(v),
+    },
+    endInterval: {
+      validate: v => time.test(v),
+    },
   },
   user: {
     userId: {
@@ -66,15 +72,15 @@ const sanitizers = {
       validate: v => isInt(v, {min: 1}),
     },
     firstname: {
-      validate: v => isLength(v, {min:0, max: 50}),
+      validate: v => isLength(v, {min: 1, max: 50}),
       sanitize: escape,
     },
     middlename: {
-      validate: v => isLength(v, {min:0, max: 50}),
+      validate: v => isLength(v, {min: 1, max: 50}),
       sanitize: escape,
     },
     lastname: {
-      validate: v => isLength(v, {min:0, max: 50}),
+      validate: v => isLength(v, {min: 1, max: 50}),
       sanitize: escape,
     },
     gender: {

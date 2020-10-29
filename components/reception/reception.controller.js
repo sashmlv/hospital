@@ -12,7 +12,7 @@ class ReceptionController {
 
   async getReceptions(args) {
 
-    args = sanitize('reception', args, 'page', 'limit',);
+    args = sanitize('reception', args,);
 
     const {limit = 100, page = 1,} = args;
 
@@ -23,7 +23,7 @@ class ReceptionController {
 
   async createOrUpdate(args) {
 
-    args = sanitize('reception', args, 'doctorId,', 'date,', 'startTime', 'endTime',);
+    args = sanitize('reception', args, 'doctorId', 'date', 'startTime', 'endTime',);
 
     const {
       doctorId,

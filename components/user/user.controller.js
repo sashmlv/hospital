@@ -8,7 +8,7 @@ class UserController {
 
   async getUsers(args) {
 
-    args = sanitize('user', args, 'limit', 'page',);
+    args = sanitize('user', args,);
 
     const {limit = 100, page = 1,} = args;
 

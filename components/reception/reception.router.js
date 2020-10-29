@@ -50,7 +50,7 @@ router.post(`/receptions/interval`, async (req, res, next) => {
 
   return await tryExecute(
     async _=> res.locals.result = {
-      data: await rc.createOrUpdateReceptionsInterval({...req.body, method: req.method}),
+      data: await rc.createOrUpdateReceptionsInterval({...req.body}),
     },
     next,
   );
