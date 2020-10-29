@@ -8,6 +8,7 @@ class ReceptionModel {
   async getReceptions(args) {
 
     const {offset, limit,} = args;
+
     return await db
       .select('*')
       .from('receptions')
@@ -46,12 +47,14 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
   async getReception(args) {
 
     const {receptionId,} = args;
+
     return await db.select('*').from('receptions').where({id: receptionId});
   }
 
   async delete(args) {
 
     const {id,} = args;
+
     return await db('receptions').del().where({id}).returning('id');
   }
 
@@ -101,14 +104,14 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
     if (taken) {
 
       throw new ServiceError({
-        message: 'Reseption already taken',
+        message: 'Reception already taken',
         data: {id: record.id}
       });
     }
     else if (!record) {
 
       throw new ServiceError({
-        message: 'Reseption not found',
+        message: 'Reception not found',
         data: {id}
       });
     }

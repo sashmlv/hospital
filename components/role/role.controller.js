@@ -1,7 +1,7 @@
 'use strict';
 
 const rm = require('./role.model'),
-  {sanitize} = require('../../modules/sanitizer');
+  sanitize = require('../../modules/sanitize');
 
 class RoleController {
 

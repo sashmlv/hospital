@@ -4,7 +4,7 @@ const rm = require('./reception.model'),
   moment = require('moment'),
   {duration} = moment,
   ServiceError = require('../../lib/error'),
-  {sanitize} = require('../../modules/sanitizer'),
+  sanitize = require('../../modules/sanitize'),
   {APP} = require('../../lib/config'),
   {RECEPTION_DURATION} = APP;
 

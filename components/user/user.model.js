@@ -7,6 +7,7 @@ class UserModel {
   async getUsers(args) {
 
     const {offset, limit,} = args;
+
     return await db
       .select('*')
       .orderBy('id')
@@ -26,6 +27,7 @@ class UserModel {
       age,
       phone,
     } = args;
+
     return await db('users').insert({
       role_id,
       firstname,
@@ -40,6 +42,7 @@ class UserModel {
   async getUser(args) {
 
     const {id,} = args;
+
     return await db.select('*').from('users').where({id});
   }
 
@@ -55,6 +58,7 @@ class UserModel {
       age,
       phone,
     } = args;
+
     return await db('users').update({
       role_id,
       firstname,
@@ -69,6 +73,7 @@ class UserModel {
   async delete(args) {
 
     const {id,} = args;
+
     return await db('users').del().where({id}).returning('id');
   }
 }

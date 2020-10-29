@@ -6,6 +6,7 @@ const express = require('express'),
   config = require('./lib/config'),
   log = require('./lib/logger'),
   router = require('./lib/router'),
+  errors = require('./modules/errors'),
   notFound = new ServiceError({
     message: 'Not found',
     code: 'NOT_FOUND',
@@ -38,6 +39,11 @@ module.exports = (async _=> {
 
   /* error */
   app.use((err, req, res, next) => {
+
+    if (err.code && errors[err.code]) {
+
+      err = errors[err.code](err);
+    }
 
     const response = {
       message: err.message || 'Service error',

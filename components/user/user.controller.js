@@ -2,7 +2,7 @@
 
 const rm = require('./user.model'),
   ServiceError = require('../../lib/error'),
-  {sanitize} = require('../../modules/sanitizer');
+  sanitize = require('../../modules/sanitize');
 
 class UserController {
 
