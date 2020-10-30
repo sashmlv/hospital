@@ -6,6 +6,7 @@ const test = require('ava'),
   rm = require('./role.model');
 
 const spy = sinon.spy((...args) => [...args]);
+
 rm.getRoles = spy;
 rm.create = spy;
 rm.getRole = spy;
@@ -14,7 +15,7 @@ rm.delete = spy;
 
 test.afterEach(t => spy.resetHistory());
 
-test( `RoleController.getRoles`, async t => {
+test(`role.controller.getRoles`, async t => {
 
   let [args] = await rc.getRoles();
   t.deepEqual(+args.limit, 100);
@@ -27,28 +28,28 @@ test( `RoleController.getRoles`, async t => {
   t.deepEqual(rm.getRoles.callCount, 2);
 });
 
-test( `RoleController.create`, async t => {
+test(`role.controller.create`, async t => {
 
   let args = await rc.create({name: 'name'});
   t.deepEqual(rm.create.callCount, 1);
   t.truthy(args.id);
 });
 
-test( `RoleController.getRole`, async t => {
+test(`role.controller.getRole`, async t => {
 
   let [args] = await rc.getRole({roleId: 1});
   t.deepEqual(rm.getRole.callCount, 1);
   t.deepEqual(+args.id, 1);
 });
 
-test( `RoleController.update`, async t => {
+test(`role.controller.update`, async t => {
 
   let args = await rc.update({roleId: 1, name: 'name'});
   t.deepEqual(rm.getRole.callCount, 1);
   t.truthy(args.id);
 });
 
-test( `RoleController.delete`, async t => {
+test(`role.controller.delete`, async t => {
 
   let args = await rc.delete({roleId: 1});
   t.deepEqual(rm.delete.callCount, 1);

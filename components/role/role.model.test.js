@@ -16,6 +16,7 @@ let model,
   del;
 
 const dbCmd = arg => (model = arg, dbCmd);
+
 dbCmd.select = sinon.spy(arg => (select = arg, dbCmd));
 dbCmd.from = sinon.spy(arg => (from = arg, dbCmd));
 dbCmd.orderBy = sinon.spy(arg => (orderBy = arg, dbCmd));
@@ -61,7 +62,7 @@ test.afterEach(t => {
   dbCmd.del.resetHistory();
 });
 
-test( `roleModel.getRoles`, async t => {
+test(`role.model.getRoles`, async t => {
 
   await rm.getRoles({limit: 10, offset: 10});
   t.deepEqual(select, '*');
@@ -71,7 +72,7 @@ test( `roleModel.getRoles`, async t => {
   t.deepEqual(offset, 10);
 });
 
-test( `roleModel.create`, async t => {
+test(`role.model.create`, async t => {
 
   await rm.create({name: 'name'});
   t.deepEqual(model, 'roles');
@@ -79,7 +80,7 @@ test( `roleModel.create`, async t => {
   t.deepEqual(returning, 'id');
 });
 
-test( `roleModel.getRole`, async t => {
+test(`role.model.getRole`, async t => {
 
   await rm.getRole({id: 1});
   t.deepEqual(select, '*');
@@ -87,7 +88,7 @@ test( `roleModel.getRole`, async t => {
   t.deepEqual(where, {id: 1});
 });
 
-test( `roleModel.update`, async t => {
+test(`role.model.update`, async t => {
 
   await rm.update({id: 1, name: 'name'});
   t.deepEqual(model, 'roles');
@@ -96,7 +97,7 @@ test( `roleModel.update`, async t => {
   t.deepEqual(returning, 'id');
 });
 
-test( `roleModel.delete`, async t => {
+test(`role.model.delete`, async t => {
 
   await rm.delete({id: 1});
   t.deepEqual(model, 'roles');
