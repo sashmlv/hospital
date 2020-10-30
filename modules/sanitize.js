@@ -32,18 +32,10 @@ function sanitize(model, data, ...required) {
   }
 
   const strData = stringify(data),
-    keys = Object.keys(strData),
-    emptyKey = required.find(key => !keys.includes(key) || strData[key] === 'undefined' || strData[key] === undefined);
+    keys = Object.keys(strData);
 
-  let key, val, valid;
 
-  if (emptyKey) {
-
-    throw new ServiceError({
-      message: 'Field required: ' + emptyKey,
-      data: {[emptyKey]: data[emptyKey]},
-    });
-  }
+  let key, val, emptyKey, valid;
 
   for (let i = 0; i < keys.length; i++) {
 
@@ -55,6 +47,16 @@ function sanitize(model, data, ...required) {
       throw new ServiceError({
         message: 'Field is not allowed: ' + key,
         data: {[key]: data[key]},
+      });
+    }
+
+    emptyKey = required.includes(key) && (strData[key] === 'undefined' || strData[key] === undefined);
+
+    if (emptyKey) {
+
+      throw new ServiceError({
+        message: 'Field required: ' + emptyKey,
+        data: {[emptyKey]: data[emptyKey]},
       });
     }
 
