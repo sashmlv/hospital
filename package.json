@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
+    "test": "ava",
     "start": "node server.js",
     "db:up": "docker-compose -f ./build/docker-compose.yml up --detach --build",
     "db:start": "docker-compose -f ./build/docker-compose.yml start",
@@ -26,8 +27,22 @@
     "validator": "^13.1.17"
   },
   "devDependencies": {
+    "ava": "^3.13.0",
     "glob": "^7.1.6",
+    "sinon": "^9.2.1",
     "swagger-ui-express": "^4.1.4",
     "yamljs": "^0.3.0"
+  },
+  "ava": {
+    "files": [
+      "!*.js",
+      "components/**/*.test.js",
+      "libs/**/*.test.js",
+      "modules/**/*.test.js"
+    ],
+    "verbose": true,
+    "timeout": "10s",
+    "failFast": true,
+    "serial": true
   }
 }

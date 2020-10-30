@@ -2,7 +2,7 @@
 
 const {Router} = require('express'),
   router = Router(),
-  tryExecute = require('../../modules/try.execute'),
+  {tryExecute} = require('../../modules'),
   rc = require('./reception.controller');
 
 router.get(`/receptions`, async (req, res, next) => {

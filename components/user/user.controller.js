@@ -1,12 +1,12 @@
 'use strict';
 
 const rm = require('./user.model'),
-  ServiceError = require('../../lib/error'),
-  sanitize = require('../../modules/sanitize');
+  ServiceError = require('../../libs/error'),
+  {sanitize} = require('../../modules');
 
 class UserController {
 
-  async getUsers(args) {
+  async getUsers(args={}) {
 
     args = sanitize('user', args,);
 
@@ -17,7 +17,7 @@ class UserController {
     return await rm.getUsers({offset: args.offset, limit});
   };
 
-  async create(args) {
+  async create(args={}) {
 
     args = sanitize('user', args, 'roleId', 'firstname', 'middlename', 'lastname', 'gender', 'age', 'phone',);
 
@@ -44,7 +44,7 @@ class UserController {
     };
   }
 
-  async getUser(args) {
+  async getUser(args={}) {
 
     args = sanitize('user', args, 'userId',);
 
@@ -53,7 +53,7 @@ class UserController {
     return await rm.getUser({id: userId});
   }
 
-  async update(args) {
+  async update(args={}) {
 
     args = sanitize('user', args, 'userId',);
 
@@ -82,7 +82,7 @@ class UserController {
     };
   }
 
-  async delete(args) {
+  async delete(args={}) {
 
     args = sanitize('user', args, 'userId',);
 

@@ -2,11 +2,11 @@
 
 const express = require('express'),
   app = express(),
-  ServiceError = require('./lib/error'),
-  config = require('./lib/config'),
-  log = require('./lib/logger'),
-  router = require('./lib/router'),
-  errors = require('./modules/errors'),
+  ServiceError = require('./libs/error'),
+  config = require('./libs/config'),
+  log = require('./libs/logger'),
+  router = require('./libs/router'),
+  {errors} = require('./modules'),
   notFound = new ServiceError({
     message: 'Not found',
     code: 'NOT_FOUND',

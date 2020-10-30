@@ -2,8 +2,8 @@
 
 const {Router} = require('express'),
   router = Router(),
-  log = require('../lib/logger'),
-  {ROOT} = require('../lib/config'),
+  log = require('../libs/logger'),
+  {ROOT} = require('../libs/config'),
   sui = require('swagger-ui-express'),
   yaml = require('yamljs'),
   file = `${ROOT}/api.yml`;

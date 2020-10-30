@@ -3,12 +3,12 @@
 const {
   SERVER,
   NODE_ENV,
-} = require('./lib/config'),
+} = require('./libs/config'),
   {
     HOST, PORT
   } = SERVER,
-  log = require('./lib/logger'),
-  ServiceError = require('./lib/error');
+  log = require('./libs/logger'),
+  ServiceError = require('./libs/error');
 
 module.exports = (async _=> {
 

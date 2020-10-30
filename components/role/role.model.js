@@ -1,12 +1,12 @@
 'use strict';
 
-const db = require('../../lib/db-sql');
+const db = require('../../libs/db-sql');
 
 class RoleModel {
 
   async getRoles(args) {
 
-    const {offset, limit,} = args;
+    const {limit, offset,} = args;
 
     return await db
       .select('*')

@@ -1,6 +1,6 @@
 'use strict';
 
-const ServiceError = require('../lib/error'),
+const ServiceError = require('../libs/error'),
   getClass = require('./get.class');
 
 /**

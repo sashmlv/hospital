@@ -1,6 +1,6 @@
 'use strict';
 
-const ServiceError = require('../lib/error'),
+const ServiceError = require('../libs/error'),
   stringify = require('./stringify'),
   sanitizers = require('./sanitizers');
 
@@ -12,6 +12,11 @@ const ServiceError = require('../lib/error'),
  * @return {object} Returns sanitized data
  */
 function sanitize(model, data, ...required) {
+
+  if (!data) {
+
+    return data;
+  }
 
   if (!sanitizers[model]) {
 

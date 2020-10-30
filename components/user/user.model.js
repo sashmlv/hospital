@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('../../lib/db-sql');
+const db = require('../../libs/db-sql');
 
 class UserModel {
 

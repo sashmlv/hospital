@@ -1,7 +1,7 @@
 'use strict';
 
-const db = require('../../lib/db-sql'),
-  ServiceError = require('../../lib/error');
+const db = require('../../libs/db-sql'),
+  ServiceError = require('../../libs/error');
 
 class ReceptionModel {
 

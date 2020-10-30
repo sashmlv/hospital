@@ -3,14 +3,14 @@
 const rm = require('./reception.model'),
   moment = require('moment'),
   {duration} = moment,
-  ServiceError = require('../../lib/error'),
-  sanitize = require('../../modules/sanitize'),
-  {APP} = require('../../lib/config'),
+  ServiceError = require('../../libs/error'),
+  {sanitize} = require('../../modules'),
+  {APP} = require('../../libs/config'),
   {RECEPTION_DURATION} = APP;
 
 class ReceptionController {
 
-  async getReceptions(args) {
+  async getReceptions(args={}) {
 
     args = sanitize('reception', args,);
 
@@ -21,7 +21,7 @@ class ReceptionController {
     return await rm.getReceptions({offset: args.offset, limit});
   };
 
-  async createOrUpdate(args) {
+  async createOrUpdate(args={}) {
 
     args = sanitize('reception', args, 'doctorId', 'date', 'startTime', 'endTime',);
 
@@ -61,7 +61,7 @@ class ReceptionController {
     };
   }
 
-  async getReception(args) {
+  async getReception(args={}) {
 
     args = sanitize('reception', args, 'receptionId',);
 
@@ -70,7 +70,7 @@ class ReceptionController {
     return await rm.getReception({receptionId});
   }
 
-  async delete(args) {
+  async delete(args={}) {
 
     args = sanitize('reception', args, 'receptionId',);
 
@@ -81,7 +81,7 @@ class ReceptionController {
     };
   }
 
-  async createOrUpdateReceptionsInterval(args) {
+  async createOrUpdateReceptionsInterval(args={}) {
 
     args = sanitize('reception', args, 'doctorId', 'date', 'startInterval', 'endInterval',);
 
@@ -131,7 +131,7 @@ class ReceptionController {
     };
   }
 
-  async receptionTake(args) {
+  async receptionTake(args={}) {
 
     args = sanitize('reception', args, 'receptionId', 'patientId',);
 

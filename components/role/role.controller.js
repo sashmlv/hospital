@@ -1,11 +1,11 @@
 'use strict';
 
 const rm = require('./role.model'),
-  sanitize = require('../../modules/sanitize');
+  {sanitize} = require('../../modules');
 
 class RoleController {
 
-  async getRoles(args) {
+  async getRoles(args={}) {
 
     args = sanitize('role', args,);
 
@@ -13,10 +13,10 @@ class RoleController {
 
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
-    return await rm.getRoles({offset: args.offset, limit});
+    return await rm.getRoles({limit, offset: args.offset,});
   };
 
-  async create(args) {
+  async create(args={}) {
 
     args = sanitize('role', args, 'name',);
 
@@ -27,7 +27,7 @@ class RoleController {
     };
   }
 
-  async getRole(args) {
+  async getRole(args={}) {
 
     args = sanitize('role', args, 'roleId',);
 
@@ -36,7 +36,7 @@ class RoleController {
     return await rm.getRole({id: roleId});
   }
 
-  async update(args) {
+  async update(args={}) {
 
     args = sanitize('role', args, 'roleId', 'name',);
 
@@ -50,7 +50,7 @@ class RoleController {
     };
   }
 
-  async delete(args) {
+  async delete(args={}) {
 
     args = sanitize('role', args, 'roleId',);
 

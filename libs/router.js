@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require('express'),
-  {ROOT} = require('../lib/config'),
+  {ROOT} = require('../libs/config'),
   util = require('util'),
   Glob = require('glob').Glob,
   glob = util.promisify(Glob),
