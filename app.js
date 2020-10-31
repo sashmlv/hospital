@@ -30,7 +30,7 @@ module.exports = (async _=> {
 
     const response = {
       status: result.status || 200,
-      data: result.data && (result.data.length === 1) ? result.data[0] : result.data,
+      data: result.data,
       success:  true,
     };
 
