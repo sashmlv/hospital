@@ -2,7 +2,29 @@
 
 const test = require('ava'),
   sinon = require('sinon'),
-  sanitize = require('../modules/sanitize');
+  sanitizers = require('./sanitizers'),
+  stringify = require('./stringify'),
+  stf = sinon.spy(stringify),
+  vld = sinon.spy(_=> true),
+  snt = sinon.spy();
+
+/* replace 'stringify' cache for '../modules/sanitize' */
+delete require.cache[require.resolve('./stringify')];
+require.cache[require.resolve('./stringify')] = {
+  exports: stf,
+};
+
+const sanitize = require('../modules/sanitize');
+
+sanitizers.role.name.validate = vld;
+sanitizers.role.name.sanitize = snt;
+
+test.afterEach(t => {
+
+  stf.resetHistory();
+  vld.resetHistory();
+  snt.resetHistory();
+});
 
 test(`sanitize nothing`, t => {
 
@@ -11,15 +33,15 @@ test(`sanitize nothing`, t => {
 
 test(`no model`, t => {
 
-  const error = t.throws(_=> sanitize('some', {}));
+  const error = t.throws(_=> sanitize('something', {}));
   t.deepEqual(error.code, 'SERVICE_ERROR');
-  t.deepEqual(error.data.model, 'some');
+  t.deepEqual(error.data.model, 'something');
 });
 
-test(`stringified`, t => {
+test(`stringify called`, t => {
 
-  const data = sanitize('role', {name: 123});
-  t.deepEqual(data.name, '123');
+  sanitize('role', {name: 123});
+  t.deepEqual(stf.callCount, 1);
 });
 
 test(`field not allowed`, t => {
@@ -36,15 +58,9 @@ test(`field required`, t => {
   t.deepEqual(error.data.name, undefined);
 });
 
-test(`validating`, t => {
+test(`validate, sanitize called`, t => {
 
-  const error = t.throws(_=> sanitize('role', {name: ''}, 'name'));
-  t.deepEqual(error.code, 'SERVICE_ERROR');
-  t.deepEqual(error.data.name, '');
-});
-
-test(`sanitizing`, t => {
-
-  const data = sanitize('role', {name: '<>&/"'}, 'name');
-  t.deepEqual(data.name, '&lt;&gt;&amp;&#x2F;&quot;');
+  sanitize('role', {name: 'name'});
+  t.deepEqual(vld.callCount, 1);
+  t.deepEqual(snt.callCount, 1);
 });

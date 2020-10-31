@@ -5,7 +5,7 @@ const {
   isInt,
   isDate,
   isMobilePhone,
-  escape,
+  escape: esc,
 } = require('validator'),
   time = /^\d{2}:\d{2}:\d{2}$/;
 
@@ -23,7 +23,7 @@ const sanitizers = {
     },
     name: {
       validate: v => isLength(v, {min: 1, max: 50}),
-      sanitize: escape,
+      sanitize: esc,
     },
   },
   reception: {
@@ -73,15 +73,15 @@ const sanitizers = {
     },
     firstname: {
       validate: v => isLength(v, {min: 1, max: 50}),
-      sanitize: escape,
+      sanitize: esc,
     },
     middlename: {
       validate: v => isLength(v, {min: 1, max: 50}),
-      sanitize: escape,
+      sanitize: esc,
     },
     lastname: {
       validate: v => isLength(v, {min: 1, max: 50}),
-      sanitize: escape,
+      sanitize: esc,
     },
     gender: {
       validate: v => ['male', 'female'].includes(v),
@@ -91,7 +91,7 @@ const sanitizers = {
     },
     phone: {
       validate: v => isMobilePhone(v, 'ru-RU'),
-      sanitize: escape,
+      sanitize: esc,
     },
   },
 };
