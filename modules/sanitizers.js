@@ -7,7 +7,7 @@ const {
   isMobilePhone,
   escape: esc,
 } = require('validator'),
-  time = /^\d{2}:\d{2}:\d{2}$/;
+  time = /^[01][0-9]|2[0-3]:[0-5][0-9]:[0-5][0-9]$/;
 
 const sanitizers = {
 

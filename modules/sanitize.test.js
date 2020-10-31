@@ -33,9 +33,9 @@ test(`sanitize nothing`, t => {
 
 test(`no model`, t => {
 
-  const error = t.throws(_=> sanitize('something', {}));
-  t.deepEqual(error.code, 'SERVICE_ERROR');
-  t.deepEqual(error.data.model, 'something');
+  const err = t.throws(_=> sanitize('something', {}));
+  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.data.model, 'something');
 });
 
 test(`stringify called`, t => {
@@ -46,16 +46,16 @@ test(`stringify called`, t => {
 
 test(`field not allowed`, t => {
 
-  const error = t.throws(_=> sanitize('role', {abc: 'abc'}));
-  t.deepEqual(error.code, 'SERVICE_ERROR');
-  t.deepEqual(error.data.name, undefined);
+  const err = t.throws(_=> sanitize('role', {abc: 'abc'}));
+  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.data.name, undefined);
 });
 
 test(`field required`, t => {
 
-  const error = t.throws(_=> sanitize('role', {name: undefined}, 'name'));
-  t.deepEqual(error.code, 'SERVICE_ERROR');
-  t.deepEqual(error.data.name, undefined);
+  const err = t.throws(_=> sanitize('role', {name: undefined}, 'name'));
+  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.data.name, undefined);
 });
 
 test(`validate, sanitize called`, t => {
