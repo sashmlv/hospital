@@ -4,7 +4,7 @@
   "description": "aoamt test",
   "main": "server.js",
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSE",
   "scripts": {
     "test": "ava",
     "start": "node server.js",
