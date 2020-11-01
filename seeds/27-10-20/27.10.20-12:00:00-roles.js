@@ -11,5 +11,5 @@ exports.seed = async function(db) {
     return;
   }
 
-  await db.raw("INSERT INTO roles (name) VALUES ('doctor'), ('patient')");
+  await db.raw("INSERT INTO roles (name, record_status) VALUES ('doctor', 'active'), ('patient', 'active')");
 };

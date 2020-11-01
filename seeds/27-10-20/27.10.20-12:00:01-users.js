@@ -19,7 +19,8 @@ INSERT INTO users (
   lastname,
   gender,
   age,
-  phone
+  phone,
+  record_status
 ) VALUES (
   1,
   'Филипп',
@@ -27,7 +28,8 @@ INSERT INTO users (
   'Преображенский',
   'male',
   65,
-  '+79001112233'
+  '+79001112233',
+  'active'
 ), (
   2,
   'Иван',
@@ -35,7 +37,8 @@ INSERT INTO users (
   'Иванов',
   'male',
   40,
-  '+79004445566'
+  '+79004445566',
+  'active'
 ), (
   2,
   'Петр',
@@ -43,7 +46,8 @@ INSERT INTO users (
   'Петров',
   'male',
   50,
-  '+79007778899'
+  '+79007778899',
+  'active'
 ), (
   2,
   'Сидор',
@@ -51,6 +55,7 @@ INSERT INTO users (
   'Сидоров',
   'male',
   60,
-  '+79001002030'
+  '+79001002030',
+  'active'
 )`);
 };

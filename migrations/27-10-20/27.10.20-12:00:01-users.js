@@ -23,6 +23,7 @@ exports.up = async function(db) {
     table.enum('gender', ['male', 'female']).notNullable();
     table.smallint('age').unsigned().notNullable();
     table.string('phone', 255 ).notNullable();
+    table.enum('record_status', ['draft', 'active', 'deleted']).notNullable().default('draft');
   });
 
   await db.schema.table('users', table => {

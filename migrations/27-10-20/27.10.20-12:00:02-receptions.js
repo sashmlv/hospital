@@ -21,6 +21,7 @@ exports.up = async function(db) {
     table.date('date').notNullable();
     table.time('start_time').notNullable();
     table.time('end_time').notNullable();
+    table.enum('record_status', ['draft', 'active', 'deleted']).notNullable().default('draft');
   });
 
   await db.schema.table('receptions', table => {
