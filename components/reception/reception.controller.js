@@ -4,7 +4,7 @@ const rm = require('./reception.model'),
   moment = require('moment'),
   {duration} = moment,
   ServiceError = require('../../libs/error'),
-  {sanitize} = require('../../modules'),
+  sanitize = require('./reception.sanitize'),
   {APP} = require('../../libs/config'),
   {RECEPTION_DURATION} = APP;
 
@@ -12,18 +12,21 @@ class ReceptionController {
 
   async getReceptions(args={}) {
 
-    args = sanitize('reception', args,);
+    args = sanitize(args);
 
     const {limit = 100, page = 1,} = args;
 
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
-    return await rm.getReceptions({offset: args.offset, limit});
+
+    const result = await rm.getReceptions({offset: args.offset, limit});
+
+    return result;
   };
 
   async createOrUpdate(args={}) {
 
-    args = sanitize('reception', args, 'doctorId', 'date', 'startTime', 'endTime',);
+    args = sanitize(args, 'doctorId', 'date', 'startTime', 'endTime');
 
     const {
       doctorId,
@@ -45,45 +48,51 @@ class ReceptionController {
         data: {
           startTime,
           endTime,
-          ...(Number.isInteger(diff) ? {difference: diff} : {}),
+          difference: diff,
         }
       });
     }
 
-    return {
-      id: (await rm.createOrUpdate({
+    const result = {
+      id: await rm.createOrUpdate({
         doctor_id: doctorId,
         patient_id: patientId,
         date,
         start_time: startTime,
         end_time: endTime,
-      })).shift()
+      })
     };
+
+    return result;
   }
 
   async getReception(args={}) {
 
-    args = sanitize('reception', args, 'receptionId',);
+    args = sanitize(args, 'receptionId');
 
     const {receptionId,} = args;
 
-    return await rm.getReception({receptionId});
+    const result = await rm.getReception({id: receptionId});
+
+    return result;
   }
 
   async delete(args={}) {
 
-    args = sanitize('reception', args, 'receptionId',);
+    args = sanitize(args, 'receptionId');
 
     const {receptionId,} = args;
 
-    return {
-      id: (await rm.delete({id: receptionId})).shift()
+    const result = {
+      id: await rm.delete({id: receptionId})
     };
+
+    return result;
   }
 
   async createOrUpdateReceptionsInterval(args={}) {
 
-    args = sanitize('reception', args, 'doctorId', 'date', 'startInterval', 'endInterval',);
+    args = sanitize(args, 'doctorId', 'date', 'startInterval', 'endInterval');
 
     const {
       doctorId,
@@ -119,7 +128,7 @@ class ReceptionController {
       });
     }
 
-    return {
+    const result = {
       ids: await rm.createOrUpdateMany({
         doctor_id: doctorId,
         patient_id: patientId,
@@ -129,21 +138,25 @@ class ReceptionController {
         intervals,
       })
     };
+
+    return result;
   }
 
   async receptionTake(args={}) {
 
-    args = sanitize('reception', args, 'receptionId', 'patientId',);
+    args = sanitize(args, 'receptionId', 'patientId');
 
     const {
       receptionId,
       patientId,
     } = args;
 
-    return await rm.updateByPatient({
+    const result = await rm.updateByPatient({
       id: receptionId,
       patient_id: patientId,
     });
+
+    return result;
   }
 }
 

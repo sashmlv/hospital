@@ -3,9 +3,8 @@
 const test = require('ava'),
   sinon = require('sinon'),
   rc = require('./role.controller'),
-  rm = require('./role.model');
-
-const spy = sinon.spy((...args) => [...args]);
+  rm = require('./role.model'),
+  spy = sinon.spy((...args) => [...args]);
 
 rm.getRoles = spy;
 rm.create = spy;
@@ -17,41 +16,41 @@ test.afterEach(t => spy.resetHistory());
 
 test(`role.controller.getRoles`, async t => {
 
-  let [args] = await rc.getRoles();
-  t.deepEqual(+args.limit, 100);
-  t.deepEqual(+args.offset, 0);
+  let [data] = await rc.getRoles();
+  t.deepEqual(+data.limit, 100);
+  t.deepEqual(+data.offset, 0);
   t.deepEqual(rm.getRoles.callCount, 1);
 
-  [args] = await rc.getRoles({limit: 10, page: 2});
-  t.deepEqual(+args.limit, 10);
-  t.deepEqual(+args.offset, 10);
+  [data] = await rc.getRoles({limit: 10, page: 2});
+  t.deepEqual(+data.limit, 10);
+  t.deepEqual(+data.offset, 10);
   t.deepEqual(rm.getRoles.callCount, 2);
 });
 
 test(`role.controller.create`, async t => {
 
-  let args = await rc.create({name: 'name'});
+  let data = await rc.create({name: 'name'});
   t.deepEqual(rm.create.callCount, 1);
-  t.truthy(args.id);
+  t.truthy(data.id);
 });
 
 test(`role.controller.getRole`, async t => {
 
-  let [args] = await rc.getRole({roleId: 1});
+  let [data] = await rc.getRole({roleId: 1});
   t.deepEqual(rm.getRole.callCount, 1);
-  t.deepEqual(+args.id, 1);
+  t.deepEqual(+data.id, 1);
 });
 
 test(`role.controller.update`, async t => {
 
-  let args = await rc.update({roleId: 1, name: 'name'});
+  let data = await rc.update({roleId: 1, name: 'name'});
   t.deepEqual(rm.getRole.callCount, 1);
-  t.truthy(args.id);
+  t.truthy(data.id);
 });
 
 test(`role.controller.delete`, async t => {
 
-  let args = await rc.delete({roleId: 1});
+  let data = await rc.delete({roleId: 1});
   t.deepEqual(rm.delete.callCount, 1);
-  t.truthy(args.id);
+  t.truthy(data.id);
 });

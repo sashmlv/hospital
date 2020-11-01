@@ -9,12 +9,14 @@ class ReceptionModel {
 
     const {offset, limit,} = args;
 
-    return await db
+    const result = await db
       .select('*')
       .from('receptions')
       .orderBy('id')
       .limit(limit)
       .offset(offset);
+
+    return result;
   }
 
   async createOrUpdate(args) {
@@ -27,7 +29,7 @@ class ReceptionModel {
       end_time,
     } = args;
 
-    return (await db.raw(`
+    const result = await db.raw(`
 WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
 INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUES (?, ?, ?, ?, ?) RETURNING id`,
       [
@@ -41,27 +43,32 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
         start_time,
         end_time,
       ]
-    )).rows;
+    );
+
+    return result;
   }
 
   async getReception(args) {
 
-    const {receptionId,} = args;
+    const {id,} = args;
 
-    return await db.select('*').from('receptions').where({id: receptionId});
+    const result = await db.select('*').from('receptions').where({id});
+
+    return result;
   }
 
   async delete(args) {
 
     const {id,} = args;
 
-    return await db('receptions').del().where({id}).returning('id');
+    const result = await db('receptions').del().where({id}).returning('id');
+
+    return result;
   }
 
   async createOrUpdateMany(args) {
 
     const {
-      method,
       doctor_id,
       patient_id = null,
       date,
@@ -78,7 +85,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       end_time: v.end_time,
     }));
 
-    return await db.with('cte', db.raw('DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
+    const result = await db.with('cte', db.raw('DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
       [
         start_interval,
         start_interval,
@@ -86,6 +93,8 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
         end_interval,
       ])
     ).insert(newRecords).into('receptions').returning('id');
+
+    return result;
   }
 
   async updateByPatient(args) {
@@ -95,11 +104,20 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       patient_id,
     } = args;
 
-    const record = (await db.raw(
+    const record = await db.raw(
       'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL) SELECT * FROM receptions WHERE id = ?',
       [patient_id, id, id,]
-    )).rows.shift(),
-      taken = record && record.patient_id && (record.patient_id !== patient_id);
+    );
+
+    if (!record) {
+
+      throw new ServiceError({
+        message: 'Reception not found',
+        data: {id}
+      });
+    }
+
+    const taken = record && record.patient_id && (record.patient_id !== patient_id);
 
     if (taken) {
 
@@ -108,16 +126,9 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
         data: {id: record.id}
       });
     }
-    else if (!record) {
-
-      throw new ServiceError({
-        message: 'Reception not found',
-        data: {id}
-      });
-    }
 
     record.patient_id = +patient_id;
-    return [record];
+    return record;
   }
 }
 

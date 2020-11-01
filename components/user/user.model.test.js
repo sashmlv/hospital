@@ -7,53 +7,53 @@ const test = require('ava'),
 
 fakeDb.setStorage(storage);
 
-/* replace 'db' cache for './role.model' */
+/* replace 'db' cache for './user.model' */
 delete require.cache[require.resolve('../../libs/db-sql')];
 require.cache[require.resolve('../../libs/db-sql')] = {
   exports: fakeDb,
 };
 
-const rm = require('./role.model');
+const um = require('./user.model');
 
-test(`role.model.getRoles`, async t => {
+test(`user.model.getUsers`, async t => {
 
-  await rm.getRoles({limit: 10, offset: 10});
+  await um.getUsers({limit: 10, offset: 10});
   t.deepEqual(storage.select.shift(), '*');
-  t.deepEqual(storage.from.shift(), 'roles');
+  t.deepEqual(storage.from.shift(), 'users');
   t.deepEqual(storage.orderBy.shift(), 'id');
   t.deepEqual(storage.limit.shift(), 10);
   t.deepEqual(storage.offset.shift(), 10);
 });
 
-test(`role.model.create`, async t => {
+test(`user.model.create`, async t => {
 
-  await rm.create({name: 'name'});
-  t.deepEqual(storage.model.shift(), 'roles');
-  t.deepEqual(storage.insert.shift(), {name: 'name'});
+  await um.create({firstname: 'firstname'});
+  t.deepEqual(storage.model.shift(), 'users');
+  t.deepEqual(storage.insert.shift().firstname, 'firstname');
   t.deepEqual(storage.returning.shift(), 'id');
 });
 
-test(`role.model.getRole`, async t => {
+test(`user.model.getUser`, async t => {
 
-  await rm.getRole({id: 1});
+  await um.getUser({id: 1});
   t.deepEqual(storage.select.shift(), '*');
-  t.deepEqual(storage.from.shift(), 'roles');
+  t.deepEqual(storage.from.shift(), 'users');
   t.deepEqual(storage.where.shift(), {id: 1});
 });
 
-test(`role.model.update`, async t => {
+test(`user.model.update`, async t => {
 
-  await rm.update({id: 1, name: 'name'});
-  t.deepEqual(storage.model.shift(), 'roles');
-  t.deepEqual(storage.update.shift(), {name: 'name'});
+  await um.update({id: 1, firstname: 'firstname'});
+  t.deepEqual(storage.model.shift(), 'users');
+  t.deepEqual(storage.update.shift().firstname, 'firstname');
   t.deepEqual(storage.where.shift(), {id: 1});
   t.deepEqual(storage.returning.shift(), 'id');
 });
 
-test(`role.model.delete`, async t => {
+test(`user.model.delete`, async t => {
 
-  await rm.delete({id: 1});
-  t.deepEqual(storage.model.shift(), 'roles');
+  await um.delete({id: 1});
+  t.deepEqual(storage.model.shift(), 'users');
   t.deepEqual(storage.del.shift(), undefined);
   t.deepEqual(storage.where.shift(), {id: 1});
   t.deepEqual(storage.returning.shift(), 'id');

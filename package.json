@@ -1,7 +1,7 @@
 {
-  "name": "aoamt-test",
+  "name": "hospital-test",
   "version": "0.0.1",
-  "description": "aoamt test",
+  "description": "hospital test",
   "main": "server.js",
   "author": "",
   "license": "UNLICENSE",

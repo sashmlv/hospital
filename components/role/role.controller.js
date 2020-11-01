@@ -1,64 +1,75 @@
 'use strict';
 
 const rm = require('./role.model'),
-  {sanitize} = require('../../modules');
+  rs = require('./role.sanitize');
 
 class RoleController {
 
   async getRoles(args={}) {
 
-    args = sanitize('role', args,);
+    args = rs(args);
 
     const {limit = 100, page = 1,} = args;
 
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
-    return await rm.getRoles({limit, offset: args.offset,});
+
+    const result = await rm.getRoles({limit, offset: args.offset,});
+
+    return result;
   };
 
   async create(args={}) {
 
-    args = sanitize('role', args, 'name',);
+    args = rs(args, 'name');
 
     const {name,} = args;
 
-    return {
-      id: (await rm.create({name})).shift()
+    const result = {
+      id: await rm.create({name})
     };
+
+    return result;
   }
 
   async getRole(args={}) {
 
-    args = sanitize('role', args, 'roleId',);
+    args = rs(args, 'roleId');
 
     const {roleId,} = args;
 
-    return await rm.getRole({id: roleId});
+    const result = await rm.getRole({id: roleId});
+
+    return result;
   }
 
   async update(args={}) {
 
-    args = sanitize('role', args, 'roleId', 'name',);
+    args = rs(args, 'roleId', 'name');
 
     const {
       roleId,
       name,
     } = args;
 
-    return {
-      id: (await rm.update({id: roleId, name,})).shift()
+    const result = {
+      id: await rm.update({id: roleId, name,})
     };
+
+    return result;
   }
 
   async delete(args={}) {
 
-    args = sanitize('role', args, 'roleId',);
+    args = rs(args, 'roleId');
 
     const {roleId,} = args;
 
-    return {
-      id: (await rm.delete({id: roleId})).shift()
+    const result = {
+      id: await rm.delete({id: roleId})
     };
+
+    return result;
   }
 }
 

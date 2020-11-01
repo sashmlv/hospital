@@ -25,11 +25,11 @@ const knex = Knex({
 
     if (result.rows) {
 
-      return result.rows.length < 2 ? result.rows.shift() : result.rows;
+      return result.rows.length < 2 ? result.rows.shift() || null : result.rows;
     }
     else if (Array.isArray(result)) {
 
-      return result.length < 2 ? result.shift() : result;
+      return result.length < 2 ? result.shift() || null : result;
     }
     else {
 

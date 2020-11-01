@@ -1,7 +1,7 @@
 'use strict';
 
-const db = require('../lib/db-sql'),
-  log = require('../lib/logger'),
+const db = require('../libs/db-sql'),
+  log = require('../libs/logger'),
   {readdirSync} = require('fs'),
   path = require('path');
 
