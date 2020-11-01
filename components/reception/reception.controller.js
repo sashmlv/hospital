@@ -85,7 +85,7 @@ class ReceptionController {
     const {receptionId,} = args;
 
     const result = {
-      id: await rm.delete({id: receptionId, record_status: 'active',})
+      id: await rm.delete({id: receptionId, record_status: 'deleted',})
     };
 
     return result;

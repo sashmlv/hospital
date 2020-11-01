@@ -78,7 +78,7 @@ class UserModel {
       age,
       phone,
       record_status,
-    }).where({id}).returning('id');
+    }).where({id, record_status: 'active',}).returning('id');
 
     return result;
   }
@@ -87,7 +87,7 @@ class UserModel {
 
     const {id, record_status,} = args;
 
-    const result = await db('users').update({record_status,}).where({id}).returning('id');
+    const result = await db('users').update({record_status,}).where({id, record_status: 'active',}).returning('id');
 
     return result;
   }

@@ -516,6 +516,9 @@ components:
           type: integer
         name:
           type: string
+        record_status:
+          type: string
+          enum: [draft, active, deleted]
     User:
       type: object
       properties:
@@ -536,6 +539,9 @@ components:
           type: integer
         phone:
           type: string
+        record_status:
+          type: string
+          enum: [draft, active, deleted]
     Reception:
       type: object
       properties:
@@ -552,3 +558,6 @@ components:
           type: string
         end_time:
           type: string
+        record_status:
+          type: string
+          enum: [draft, active, deleted]

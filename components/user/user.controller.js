@@ -100,7 +100,7 @@ class UserController {
     const {userId,} = args;
 
     const result = {
-      id: await rm.delete({id: userId, record_status: 'active',})
+      id: await rm.delete({id: userId, record_status: 'deleted',})
     };
 
     return result;

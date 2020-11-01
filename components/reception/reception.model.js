@@ -35,6 +35,8 @@ class ReceptionModel {
 WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
 INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id`,
       [
+        'deleted',
+        doctor_id,
         start_time,
         start_time,
         end_time,
@@ -44,7 +46,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
         date,
         start_time,
         end_time,
-        'active',
+        record_status,
       ]
     );
 
@@ -64,7 +66,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
 
     const {id, record_status,} = args;
 
-    const result = await db('receptions').update({record_status,}).where({id}).returning('id');
+    const result = await db('receptions').update({record_status,}).where({id, record_status: 'active',}).returning('id');
 
     return result;
   }
@@ -113,8 +115,8 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
     } = args;
 
     const record = await db.raw(
-      'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL AND record_status = ?) SELECT * FROM receptions WHERE id = ?',
-      [patient_id, id, record_status, id,]
+      'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL AND record_status = ?) SELECT * FROM receptions WHERE id = ? AND record_status = ?',
+      [patient_id, id, record_status, id, record_status,]
     );
 
     if (!record) {

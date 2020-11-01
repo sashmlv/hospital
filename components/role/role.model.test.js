@@ -55,6 +55,6 @@ test(`role.model.delete`, async t => {
   await rm.delete({id: 1});
   t.deepEqual(storage.model.shift(), 'roles');
   t.deepEqual(storage.update.shift().hasOwnProperty('record_status'), true);
-  t.deepEqual(storage.where.shift(), {id: 1});
+  t.deepEqual(storage.where.shift().id, 1);
   t.deepEqual(storage.returning.shift(), 'id');
 });

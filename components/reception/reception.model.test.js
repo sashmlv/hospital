@@ -33,6 +33,7 @@ test(`reception.model.createOrUpdate`, async t => {
     date: '2020-01-01',
     start_time: '06:00:00',
     end_time: '06:50:00',
+    record_status: 'active',
   });
 
   t.deepEqual(storage.raw.shift(), `
@@ -41,6 +42,8 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
 );
 
   t.deepEqual(storage.raw.shift(), [
+    'deleted',
+    '1',
     '06:00:00',
     '06:00:00',
     '06:50:00',
@@ -69,7 +72,7 @@ test(`reception.model.delete`, async t => {
 
   t.deepEqual(storage.model.shift(), 'receptions');
   t.deepEqual(storage.update.shift().hasOwnProperty('record_status'), true);
-  t.deepEqual(storage.where.shift(), {id: 1});
+  t.deepEqual(storage.where.shift().id, 1);
   t.deepEqual(storage.returning.shift(), 'id');
 });
 
@@ -118,8 +121,8 @@ test(`reception.model.updateByPatient`, async t => {
   });
 
   t.deepEqual(storage.raw, [
-    'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL AND record_status = ?) SELECT * FROM receptions WHERE id = ?',
-    ['2', '1', 'active', '1',]
+    'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL AND record_status = ?) SELECT * FROM receptions WHERE id = ? AND record_status = ?',
+    ['2', '1', 'active', '1', 'active',]
   ]);
 
   fakeDb.raw = _=> ({id: 10, patient_id: 3});

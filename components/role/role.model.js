@@ -50,7 +50,7 @@ class RoleModel {
 
     const {id, record_status,} = args;
 
-    const result = await db('roles').update({record_status,}).where({id,}).returning('id');
+    const result = await db('roles').update({record_status,}).where({id, record_status: 'active',}).returning('id');
 
     return result;
   }
