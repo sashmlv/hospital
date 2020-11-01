@@ -19,7 +19,7 @@ class ReceptionController {
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
 
-    const result = await rm.getReceptions({offset: args.offset, limit});
+    const result = await rm.getReceptions({limit, offset: args.offset, record_status: 'active',});
 
     return result;
   };
@@ -60,6 +60,7 @@ class ReceptionController {
         date,
         start_time: startTime,
         end_time: endTime,
+        record_status: 'active',
       })
     };
 
@@ -72,7 +73,7 @@ class ReceptionController {
 
     const {receptionId,} = args;
 
-    const result = await rm.getReception({id: receptionId});
+    const result = await rm.getReception({id: receptionId, record_status: 'active',});
 
     return result;
   }
@@ -84,7 +85,7 @@ class ReceptionController {
     const {receptionId,} = args;
 
     const result = {
-      id: await rm.delete({id: receptionId})
+      id: await rm.delete({id: receptionId, record_status: 'active',})
     };
 
     return result;
@@ -136,6 +137,7 @@ class ReceptionController {
         start_interval: startInterval,
         end_interval: endInterval,
         intervals,
+        record_status: 'active',
       })
     };
 
@@ -154,6 +156,7 @@ class ReceptionController {
     const result = await rm.updateByPatient({
       id: receptionId,
       patient_id: patientId,
+      record_status: 'active',
     });
 
     return result;

@@ -6,11 +6,12 @@ class UserModel {
 
   async getUsers(args) {
 
-    const {offset, limit,} = args;
+    const {limit, offset, record_status,} = args;
 
     const result = await db
       .select('*')
       .from('users')
+      .where({record_status,})
       .orderBy('id')
       .limit(limit)
       .offset(offset);
@@ -28,6 +29,7 @@ class UserModel {
       gender,
       age,
       phone,
+      record_status,
     } = args;
 
     const result = await db('users').insert({
@@ -38,6 +40,7 @@ class UserModel {
       gender,
       age,
       phone,
+      record_status,
     }).returning('id');
 
     return result;
@@ -45,9 +48,9 @@ class UserModel {
 
   async getUser(args) {
 
-    const {id,} = args;
+    const {id, record_status,} = args;
 
-    const result = await db.select('*').from('users').where({id});
+    const result = await db.select('*').from('users').where({id, record_status,});
 
     return result;
   }
@@ -63,6 +66,7 @@ class UserModel {
       gender,
       age,
       phone,
+      record_status,
     } = args;
 
     const result = await db('users').update({
@@ -73,6 +77,7 @@ class UserModel {
       gender,
       age,
       phone,
+      record_status,
     }).where({id}).returning('id');
 
     return result;
@@ -80,9 +85,9 @@ class UserModel {
 
   async delete(args) {
 
-    const {id,} = args;
+    const {id, record_status,} = args;
 
-    const result = await db('users').del().where({id}).returning('id');
+    const result = await db('users').update({record_status,}).where({id}).returning('id');
 
     return result;
   }

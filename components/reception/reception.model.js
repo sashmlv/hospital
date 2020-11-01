@@ -7,11 +7,12 @@ class ReceptionModel {
 
   async getReceptions(args) {
 
-    const {offset, limit,} = args;
+    const {limit, offset, record_status,} = args;
 
     const result = await db
       .select('*')
       .from('receptions')
+      .where({record_status,})
       .orderBy('id')
       .limit(limit)
       .offset(offset);
@@ -27,11 +28,12 @@ class ReceptionModel {
       date,
       start_time,
       end_time,
+      record_status,
     } = args;
 
     const result = await db.raw(`
 WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
-INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUES (?, ?, ?, ?, ?) RETURNING id`,
+INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id`,
       [
         start_time,
         start_time,
@@ -42,6 +44,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
         date,
         start_time,
         end_time,
+        'active',
       ]
     );
 
@@ -50,18 +53,18 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
 
   async getReception(args) {
 
-    const {id,} = args;
+    const {id, record_status,} = args;
 
-    const result = await db.select('*').from('receptions').where({id});
+    const result = await db.select('*').from('receptions').where({id, record_status,});
 
     return result;
   }
 
   async delete(args) {
 
-    const {id,} = args;
+    const {id, record_status,} = args;
 
-    const result = await db('receptions').del().where({id}).returning('id');
+    const result = await db('receptions').update({record_status,}).where({id}).returning('id');
 
     return result;
   }
@@ -75,6 +78,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       start_interval,
       end_interval,
       intervals,
+      record_status,
     } = args;
 
     const newRecords = intervals.map(v => ({
@@ -83,10 +87,13 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
       date,
       start_time: v.start_time,
       end_time: v.end_time,
+      record_status: 'active',
     }));
 
-    const result = await db.with('cte', db.raw('DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
+    const result = await db.with('cte', db.raw('UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
       [
+        'deleted',
+        doctor_id,
         start_interval,
         start_interval,
         end_interval,
@@ -102,11 +109,12 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time) VALUE
     const {
       id,
       patient_id,
+      record_status,
     } = args;
 
     const record = await db.raw(
-      'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL) SELECT * FROM receptions WHERE id = ?',
-      [patient_id, id, id,]
+      'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL AND record_status = ?) SELECT * FROM receptions WHERE id = ?',
+      [patient_id, id, record_status, id,]
     );
 
     if (!record) {

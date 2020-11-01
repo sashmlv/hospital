@@ -38,7 +38,7 @@ test(`user.model.getUser`, async t => {
   await um.getUser({id: 1});
   t.deepEqual(storage.select.shift(), '*');
   t.deepEqual(storage.from.shift(), 'users');
-  t.deepEqual(storage.where.shift(), {id: 1});
+  t.deepEqual(storage.where.shift().id, 1);
 });
 
 test(`user.model.update`, async t => {
@@ -54,7 +54,7 @@ test(`user.model.delete`, async t => {
 
   await um.delete({id: 1});
   t.deepEqual(storage.model.shift(), 'users');
-  t.deepEqual(storage.del.shift(), undefined);
+  t.deepEqual(storage.update.shift().hasOwnProperty('record_status'), true);
   t.deepEqual(storage.where.shift(), {id: 1});
   t.deepEqual(storage.returning.shift(), 'id');
 });

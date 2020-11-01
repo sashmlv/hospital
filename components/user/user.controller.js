@@ -15,7 +15,7 @@ class UserController {
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
 
-    const result =  await rm.getUsers({offset: args.offset, limit});
+    const result =  await rm.getUsers({limit, offset: args.offset, record_status: 'active',});
 
     return result;
   };
@@ -43,6 +43,7 @@ class UserController {
         gender,
         age,
         phone,
+        record_status: 'active',
       })
     };
 
@@ -55,7 +56,7 @@ class UserController {
 
     const {userId,} = args;
 
-    const result = await rm.getUser({id: userId});
+    const result = await rm.getUser({id: userId, record_status: 'active',});
 
     return result;
   }
@@ -85,6 +86,7 @@ class UserController {
         gender,
         age,
         phone,
+        record_status: 'active',
       })
     };
 
@@ -98,7 +100,7 @@ class UserController {
     const {userId,} = args;
 
     const result = {
-      id: await rm.delete({id: userId})
+      id: await rm.delete({id: userId, record_status: 'active',})
     };
 
     return result;

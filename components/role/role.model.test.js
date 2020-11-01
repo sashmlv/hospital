@@ -29,7 +29,7 @@ test(`role.model.create`, async t => {
 
   await rm.create({name: 'name'});
   t.deepEqual(storage.model.shift(), 'roles');
-  t.deepEqual(storage.insert.shift(), {name: 'name'});
+  t.deepEqual(storage.insert.shift().name, 'name');
   t.deepEqual(storage.returning.shift(), 'id');
 });
 
@@ -38,7 +38,7 @@ test(`role.model.getRole`, async t => {
   await rm.getRole({id: 1});
   t.deepEqual(storage.select.shift(), '*');
   t.deepEqual(storage.from.shift(), 'roles');
-  t.deepEqual(storage.where.shift(), {id: 1});
+  t.deepEqual(storage.where.shift().id, 1);
 });
 
 test(`role.model.update`, async t => {
@@ -46,7 +46,7 @@ test(`role.model.update`, async t => {
   await rm.update({id: 1, name: 'name'});
   t.deepEqual(storage.model.shift(), 'roles');
   t.deepEqual(storage.update.shift(), {name: 'name'});
-  t.deepEqual(storage.where.shift(), {id: 1});
+  t.deepEqual(storage.where.shift().id, 1);
   t.deepEqual(storage.returning.shift(), 'id');
 });
 
@@ -54,7 +54,7 @@ test(`role.model.delete`, async t => {
 
   await rm.delete({id: 1});
   t.deepEqual(storage.model.shift(), 'roles');
-  t.deepEqual(storage.del.shift(), undefined);
+  t.deepEqual(storage.update.shift().hasOwnProperty('record_status'), true);
   t.deepEqual(storage.where.shift(), {id: 1});
   t.deepEqual(storage.returning.shift(), 'id');
 });

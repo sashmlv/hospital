@@ -14,7 +14,7 @@ class RoleController {
     args.page = page > 0 ? page : 1;
     args.offset = (page - 1) * limit;
 
-    const result = await rm.getRoles({limit, offset: args.offset,});
+    const result = await rm.getRoles({limit, offset: args.offset, record_status: 'active',});
 
     return result;
   };
@@ -26,7 +26,7 @@ class RoleController {
     const {name,} = args;
 
     const result = {
-      id: await rm.create({name})
+      id: await rm.create({name, record_status: 'active',})
     };
 
     return result;
@@ -38,7 +38,7 @@ class RoleController {
 
     const {roleId,} = args;
 
-    const result = await rm.getRole({id: roleId});
+    const result = await rm.getRole({id: roleId, record_status: 'active',});
 
     return result;
   }
@@ -53,7 +53,7 @@ class RoleController {
     } = args;
 
     const result = {
-      id: await rm.update({id: roleId, name,})
+      id: await rm.update({id: roleId, name, record_status: 'active',})
     };
 
     return result;
@@ -66,7 +66,7 @@ class RoleController {
     const {roleId,} = args;
 
     const result = {
-      id: await rm.delete({id: roleId})
+      id: await rm.delete({id: roleId, record_status: 'deleted'})
     };
 
     return result;
