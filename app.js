@@ -10,7 +10,12 @@ const express = require('express'),
   notFound = new ServiceError({
     message: 'Not found',
     code: 'NOT_FOUND',
-    status: '404',
+    status: 404,
+  }),
+  defaultError = new ServiceError({
+    message: 'Service error',
+    code: 'SERVICE_ERROR',
+    status: 500,
   });
 
 module.exports = (async _=> {
@@ -45,6 +50,13 @@ module.exports = (async _=> {
       err = errors[err.code](err);
     }
 
+    log.error(err);
+
+    if (err.name !== 'ServiceError' ) {
+
+      err = defaultError;
+    }
+
     const response = {
       message: err.message || 'Service error',
       code: err.code || 'SERVICE_ERROR',
@@ -52,8 +64,6 @@ module.exports = (async _=> {
       data: err.data && (err.data.length === 1) ? err.data[0] : err.data,
       success: false,
     };
-
-    log.error(err);
 
     if (res.headersSent) {
 

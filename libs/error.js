@@ -2,36 +2,37 @@
 
 class ServiceError extends Error {
 
-   constructor(args) {
+  constructor(args) {
 
-      super();
+    super();
 
-      if (typeof args === 'string') {
+    if (typeof args === 'string') {
 
-         args = {message: args};
-      }
+      args = {message: args};
+    }
 
-      const {
-         message,
-         code,
-         status,
-         data,
-      } = args;
+    const {
+      message,
+      code,
+      status,
+      data,
+    } = args;
 
-      this.message = message || 'Service error';
-      this.code = code || 'SERVICE_ERROR';
-      this.status = status || 400;
-      this.data = data;
+    this.name = 'ServiceError';
+    this.message = message || 'Service error';
+    this.code = code || 'SERVICE_ERROR';
+    this.status = status || 400;
+    this.data = data;
 
-      if (Error.captureStackTrace) {
+    if (Error.captureStackTrace) {
 
-         Error.captureStackTrace(this, this.constructor);
-      }
-      else {
+      Error.captureStackTrace(this, this.constructor);
+    }
+    else {
 
-         this.stack = (new Error()).stack;
-      }
-   }
+      this.stack = (new Error()).stack;
+    }
+  }
 }
 
 module.exports = ServiceError;
