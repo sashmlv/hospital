@@ -29,9 +29,9 @@ test(`role.controller.getRoles`, async t => {
 
 test(`role.controller.create`, async t => {
 
-  let data = await rc.create({name: 'name'});
+  let [data] = await rc.create({name: 'name'});
   t.deepEqual(rm.create.callCount, 1);
-  t.truthy(data.id);
+  t.truthy(data.name);
 
   let err = await t.throwsAsync(rc.create({}));
   t.deepEqual(err.code, 'FIELD_REQUIRED');
@@ -51,7 +51,7 @@ test(`role.controller.getRole`, async t => {
 
 test(`role.controller.update`, async t => {
 
-  let data = await rc.update({roleId: 1, name: 'name'});
+  let [data] = await rc.update({roleId: 1, name: 'name'});
   t.deepEqual(rm.getRole.callCount, 1);
   t.truthy(data.id);
 
@@ -66,7 +66,7 @@ test(`role.controller.update`, async t => {
 
 test(`role.controller.delete`, async t => {
 
-  let data = await rc.delete({roleId: 1});
+  let [data] = await rc.delete({roleId: 1});
   t.deepEqual(rm.delete.callCount, 1);
   t.truthy(data.id);
 

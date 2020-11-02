@@ -23,7 +23,7 @@ class RoleModel {
 
     const {name, record_status,} = args;
 
-    const result = await db('roles').insert({name, record_status,}).returning('id');
+    const result = await db('roles').insert({name, record_status,}).returning('*');
 
     return result;
   }
@@ -41,7 +41,7 @@ class RoleModel {
 
     const {id, name, record_status,} = args;
 
-    const result = await db('roles').update({name,}).where({id, record_status,}).returning('id');
+    const result = await db('roles').update({name,}).where({id, record_status,}).returning('*');
 
     return result;
   }
@@ -50,7 +50,7 @@ class RoleModel {
 
     const {id, record_status,} = args;
 
-    const result = await db('roles').update({record_status,}).where({id, record_status: 'active',}).returning('id');
+    const result = await db('roles').update({record_status,}).where({id, record_status: 'active',}).returning('*');
 
     return result;
   }

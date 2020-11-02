@@ -25,9 +25,7 @@ class RoleController {
 
     const {name,} = args;
 
-    const result = {
-      id: await rm.create({name, record_status: 'active',})
-    };
+    const result = await rm.create({name, record_status: 'active',});
 
     return result;
   }
@@ -52,9 +50,7 @@ class RoleController {
       name,
     } = args;
 
-    const result = {
-      id: await rm.update({id: roleId, name, record_status: 'active',})
-    };
+    const result = await rm.update({id: roleId, name, record_status: 'active',});
 
     return result;
   }
@@ -65,9 +61,7 @@ class RoleController {
 
     const {roleId,} = args;
 
-    const result = {
-      id: await rm.delete({id: roleId, record_status: 'deleted'})
-    };
+    const result = await rm.delete({id: roleId, record_status: 'deleted'});
 
     return result;
   }

@@ -53,16 +53,14 @@ class ReceptionController {
       });
     }
 
-    const result = {
-      id: await rm.createOrUpdate({
-        doctor_id: doctorId,
-        patient_id: patientId,
-        date,
-        start_time: startTime,
-        end_time: endTime,
-        record_status: 'active',
-      })
-    };
+    const result = await rm.createOrUpdate({
+      doctor_id: doctorId,
+      patient_id: patientId,
+      date,
+      start_time: startTime,
+      end_time: endTime,
+      record_status: 'active',
+    });
 
     return result;
   }
@@ -84,9 +82,7 @@ class ReceptionController {
 
     const {receptionId,} = args;
 
-    const result = {
-      id: await rm.delete({id: receptionId, record_status: 'deleted',})
-    };
+    const result = await rm.delete({id: receptionId, record_status: 'deleted',});
 
     return result;
   }
@@ -129,17 +125,15 @@ class ReceptionController {
       });
     }
 
-    const result = {
-      ids: await rm.createOrUpdateMany({
-        doctor_id: doctorId,
-        patient_id: patientId,
-        date,
-        start_interval: startInterval,
-        end_interval: endInterval,
-        intervals,
-        record_status: 'active',
-      })
-    };
+    const result = await rm.createOrUpdateMany({
+      doctor_id: doctorId,
+      patient_id: patientId,
+      date,
+      start_interval: startInterval,
+      end_interval: endInterval,
+      intervals,
+      record_status: 'active',
+    });
 
     return result;
   }

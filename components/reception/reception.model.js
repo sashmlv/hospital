@@ -33,7 +33,7 @@ class ReceptionModel {
 
     const result = await db.raw(`
 WITH cte AS (UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND date = ? AND (start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?))
-INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id`,
+INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING *`,
       [
         'deleted',
         doctor_id,
@@ -67,7 +67,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
 
     const {id, record_status,} = args;
 
-    const result = await db('receptions').update({record_status,}).where({id, record_status: 'active',}).returning('id');
+    const result = await db('receptions').update({record_status,}).where({id, record_status: 'active',}).returning('*');
 
     return result;
   }
@@ -103,7 +103,7 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
         end_interval,
         end_interval,
       ])
-    ).insert(newRecords).into('receptions').returning('id');
+    ).insert(newRecords).into('receptions').returning('*');
 
     return result;
   }

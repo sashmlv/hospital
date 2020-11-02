@@ -33,18 +33,16 @@ class UserController {
       phone,
     } = args;
 
-    const result = {
-      id: await rm.create({
-        role_id: roleId,
-        firstname,
-        middlename,
-        lastname,
-        gender,
-        age,
-        phone,
-        record_status: 'active',
-      })
-    };
+    const result = await rm.create({
+      role_id: roleId,
+      firstname,
+      middlename,
+      lastname,
+      gender,
+      age,
+      phone,
+      record_status: 'active',
+    });
 
     return result;
   }
@@ -75,19 +73,17 @@ class UserController {
       phone,
     } = args;
 
-    const result = {
-      id: await rm.update({
-        id: userId,
-        role_id: roleId,
-        firstname,
-        middlename,
-        lastname,
-        gender,
-        age,
-        phone,
-        record_status: 'active',
-      })
-    };
+    const result = await rm.update({
+      id: userId,
+      role_id: roleId,
+      firstname,
+      middlename,
+      lastname,
+      gender,
+      age,
+      phone,
+      record_status: 'active',
+    });
 
     return result;
   }
@@ -98,9 +94,7 @@ class UserController {
 
     const {userId,} = args;
 
-    const result = {
-      id: await rm.delete({id: userId, record_status: 'deleted',})
-    };
+    const result = await rm.delete({id: userId, record_status: 'deleted',});
 
     return result;
   }

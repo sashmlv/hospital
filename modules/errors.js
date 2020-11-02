@@ -1,14 +1,29 @@
 'use strict';
 
-const snakeToCamel = require('./snake.to.camel');
+const ServiceError = require('../libs/service.error'),
+  snakeToCamel = require('./snake.to.camel');
+
+const errors = {
+
+  23503: err => new ServiceError({
+    message: 'Value is not present in table',
+    code: 'NOT_PRESENT',
+    data: getErrData(err),
+  }),
+
+  23505: err => new ServiceError({
+    message: 'Value already exists',
+    code: 'ALREADY_EXISTS',
+    data: getErrData(err),
+  }),
+};
 
 /**
- * Get error
+ * Get error data
  * @param {object} err - original error
- * @param {object} newErr - new error data
- * @return {object} Return error
+ * @return {object} Return error data
  */
-function getErr(err, newErr) {
+function getErrData(err) {
 
   if (err.detail) {
 
@@ -16,19 +31,11 @@ function getErr(err, newErr) {
 
     if(match[1] && match[2]) {
 
-      err.data = {[snakeToCamel(match[1])]: match[2]};
+      return {[snakeToCamel(match[1])]: match[2]};
     }
   }
-  return newErr ? Object.assign(err, newErr) : err;
+
+  return null;
 }
-
-const errors = {
-
-  23503: err => getErr(err, {
-    message: 'Value is not present in table',
-    code: 'NOT_PRESENT',
-    status: 400,
-  }),
-};
 
 module.exports = errors;

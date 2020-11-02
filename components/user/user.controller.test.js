@@ -29,7 +29,7 @@ test(`user.controller.getUsers`, async t => {
 
 test(`user.controller.create`, async t => {
 
-  let data = await uc.create({ // success
+  let [data] = await uc.create({ // success
     roleId: '1',
     firstname: 'firstname',
     middlename: 'middlename',
@@ -39,7 +39,7 @@ test(`user.controller.create`, async t => {
     phone: '+79001112233',
   });
   t.deepEqual(um.create.callCount, 1);
-  t.truthy(data.id);
+  t.truthy(data.role_id);
 
   let err = await t.throwsAsync(uc.create({
     firstname: 'firstname',
@@ -132,7 +132,7 @@ test(`user.controller.getUser`, async t => {
 
 test(`user.controller.update`, async t => {
 
-  let data = await uc.update({userId: 1, firstname: 'firstname'});
+  let [data] = await uc.update({userId: 1, firstname: 'firstname'});
   t.deepEqual(um.getUser.callCount, 1);
   t.truthy(data.id);
 
@@ -143,7 +143,7 @@ test(`user.controller.update`, async t => {
 
 test(`user.controller.delete`, async t => {
 
-  let data = await uc.delete({userId: 1});
+  let [data] = await uc.delete({userId: 1});
   t.deepEqual(um.delete.callCount, 1);
   t.truthy(data.id);
 

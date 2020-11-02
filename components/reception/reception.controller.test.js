@@ -28,7 +28,7 @@ test(`reception.controller.getReceptions`, async t => {
 
 test(`reception.controller.createOrUpdate`, async t => {
 
-  let err = await t.throwsAsync(rc.createOrUpdate({ // bad duration
+  let err = await t.throwsAsync(rc.createOrUpdate({
     doctorId: '1',
     date: '2020-01-01',
     startTime: '06:00:00',
@@ -40,14 +40,15 @@ test(`reception.controller.createOrUpdate`, async t => {
   t.deepEqual(err.data.endTime, '06:50:00');
   t.deepEqual(err.data.difference, 50);
 
-  let data = await rc.createOrUpdate({ // success
+  let [data] = await rc.createOrUpdate({
     doctorId: '1',
     date: '2020-01-01',
     startTime: '06:00:00',
     endTime: `06:${APP.RECEPTION_DURATION}:00`,
   });
+
   t.deepEqual(rm.createOrUpdate.callCount, 1);
-  t.truthy(data.id);
+  t.truthy(data.doctor_id);
 
   err = await t.throwsAsync(rc.createOrUpdate({
     date: '2020-01-01',
@@ -95,7 +96,7 @@ test(`reception.controller.getReception`, async t => {
 
 test(`reception.controller.delete`, async t => {
 
-  let data = await rc.delete({receptionId: 1});
+  let [data] = await rc.delete({receptionId: 1});
   t.deepEqual(rm.delete.callCount, 1);
   t.truthy(data.id);
 
@@ -117,7 +118,7 @@ test(`reception.controller.createOrUpdateReceptionsInterval`, async t => {
   t.deepEqual(err.data.startInterval, '06:00:00');
   t.deepEqual(err.data.endInterval, '06:50:00');
 
-  let data = await rc.createOrUpdateReceptionsInterval({
+  let [data] = await rc.createOrUpdateReceptionsInterval({
     doctorId: '1',
     date: '2020-01-01',
     startInterval: '06:00:00',
@@ -125,13 +126,12 @@ test(`reception.controller.createOrUpdateReceptionsInterval`, async t => {
   });
 
   t.deepEqual(rm.createOrUpdateMany.callCount, 1);
-  t.truthy(data.ids);
-  t.deepEqual(data.ids[0].doctor_id, '1');
-  t.deepEqual(data.ids[0].patient_id, null);
-  t.deepEqual(data.ids[0].date, '2020-01-01');
-  t.deepEqual(data.ids[0].start_interval, '06:00:00');
-  t.deepEqual(data.ids[0].end_interval,`07:${APP.RECEPTION_DURATION}:00`);
-  t.deepEqual(data.ids[0].intervals.length, 3);
+  t.deepEqual(data.doctor_id, '1');
+  t.deepEqual(data.patient_id, null);
+  t.deepEqual(data.date, '2020-01-01');
+  t.deepEqual(data.start_interval, '06:00:00');
+  t.deepEqual(data.end_interval,`07:${APP.RECEPTION_DURATION}:00`);
+  t.deepEqual(data.intervals.length, 3);
 
   err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({
     date: '2020-01-01',

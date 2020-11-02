@@ -38,7 +38,7 @@ test(`reception.model.createOrUpdate`, async t => {
 
   t.deepEqual(storage.raw.shift(), `
 WITH cte AS (UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND date = ? AND (start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?))
-INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id`,
+INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING *`,
 );
 
   t.deepEqual(storage.raw.shift(), [
@@ -74,7 +74,7 @@ test(`reception.model.delete`, async t => {
   t.deepEqual(storage.model.shift(), 'receptions');
   t.deepEqual(storage.update.shift().hasOwnProperty('record_status'), true);
   t.deepEqual(storage.where.shift().id, 1);
-  t.deepEqual(storage.returning.shift(), 'id');
+  t.deepEqual(storage.returning.shift(), '*');
 });
 
 test(`reception.model.createOrUpdateMany`, async t => {
@@ -111,7 +111,7 @@ test(`reception.model.createOrUpdateMany`, async t => {
     record_status: 'active',
   }]);
   t.deepEqual(storage.into.shift(), 'receptions');
-  t.deepEqual(storage.returning.shift(), 'id');
+  t.deepEqual(storage.returning.shift(), '*');
 });
 
 test(`reception.model.updateByPatient`, async t => {
