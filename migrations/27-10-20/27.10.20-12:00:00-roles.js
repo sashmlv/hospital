@@ -18,6 +18,7 @@ exports.up = async function(db) {
     table.increments('id');
     table.string('name', 255).unique().notNullable();
     table.enum('record_status', ['draft', 'active', 'deleted']).notNullable().default('draft');
+    table.index('record_status');
   });
 };
 

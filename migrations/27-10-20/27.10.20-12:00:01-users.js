@@ -24,6 +24,7 @@ exports.up = async function(db) {
     table.smallint('age').unsigned().notNullable();
     table.string('phone', 255 ).notNullable();
     table.enum('record_status', ['draft', 'active', 'deleted']).notNullable().default('draft');
+    table.index('record_status');
   });
 
   await db.schema.table('users', table => {
