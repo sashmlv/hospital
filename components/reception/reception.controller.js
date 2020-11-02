@@ -1,8 +1,11 @@
 'use strict';
 
 const rm = require('./reception.model'),
-  moment = require('moment'),
-  {duration} = moment,
+  {
+    differenceInMinutes,
+    format,
+    addMinutes,
+  } = require('date-fns'),
   re = require('./reception.error'),
   sanitize = require('./reception.sanitize'),
   {APP} = require('../../libs/config'),
@@ -36,10 +39,10 @@ class ReceptionController {
       endTime,
     } = args;
 
-    const diff = duration(
-      moment(moment(new Date(`${date} ${endTime}`)))
-        .diff(new Date(`${date} ${startTime}`)),
-    ).asMinutes();
+    const diff = differenceInMinutes(
+      new Date(`${date} ${endTime}`),
+      new Date(`${date} ${startTime}`)
+    );
 
     if (diff !== RECEPTION_DURATION) {
 
@@ -100,10 +103,10 @@ class ReceptionController {
       endInterval,
     } = args;
 
-    const diff = duration(
-      moment(moment(new Date(`${date} ${endInterval}`)))
-        .diff(new Date(`${date} ${startInterval}`)),
-    ).asMinutes();
+    const diff = differenceInMinutes(
+      new Date(`${date} ${endInterval}`),
+      new Date(`${date} ${startInterval}`)
+    );
 
     if (diff % RECEPTION_DURATION !== 0) {
 
@@ -115,14 +118,14 @@ class ReceptionController {
 
     const intervals = [];
 
-    let start = moment(new Date(`${date} ${startInterval}`)),
-      end = moment(new Date(`${date} ${endInterval}`));
+    let start = new Date(`${date} ${startInterval}`),
+      end = new Date(`${date} ${endInterval}`);
 
     while(start < end) {
 
       intervals.push({
-        start_time: start.format('HH:mm:ss'),
-        end_time: (start = start.add(RECEPTION_DURATION, 'minutes')).format('HH:mm:ss'),
+        start_time: format(start, 'HH:mm:ss'),
+        end_time: format(start = addMinutes(start, RECEPTION_DURATION), 'HH:mm:ss'),
       });
     }
 

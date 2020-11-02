@@ -17,10 +17,10 @@
     "seed": "node ./seeds"
   },
   "dependencies": {
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.8",
-    "moment": "^2.29.1",
     "pg": "^8.4.2",
     "pino": "^6.7.0",
     "pino-pretty": "^4.3.0",
