@@ -1,6 +1,6 @@
 'use strict';
 
-const ServiceError = require('../libs/error'),
+const ServiceError = require('../libs/service.error'),
   getClass = require('./get.class');
 
 /**
@@ -24,6 +24,7 @@ function stringify(data, modify = false, limit = 100, count = 0) {
 
     throw new ServiceError({
       message: 'Too big object provided',
+      code: 'STRINGIFY_ERROR',
     });
   }
 

@@ -3,7 +3,7 @@
 const dotenv = require('dotenv'),
   path = require('path'),
   fs = require('fs'),
-  ServiceError = require('./error'),
+  ServiceError = require('./service.error'),
   ROOT = path.resolve(`${__dirname}/..`);
 
 if (!fs.existsSync(`${ROOT}/.env`)) {

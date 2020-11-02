@@ -3,7 +3,7 @@
 const rm = require('./reception.model'),
   moment = require('moment'),
   {duration} = moment,
-  ServiceError = require('../../libs/error'),
+  re = require('./reception.error'),
   sanitize = require('./reception.sanitize'),
   {APP} = require('../../libs/config'),
   {RECEPTION_DURATION} = APP;
@@ -43,13 +43,10 @@ class ReceptionController {
 
     if (diff !== RECEPTION_DURATION) {
 
-      throw new ServiceError({
-        message: 'Please provide reseption time equal to reception duration: ' + RECEPTION_DURATION,
-        data: {
-          startTime,
-          endTime,
-          difference: diff,
-        }
+      throw re('RECEPTION_DURATION', {
+        startTime,
+        endTime,
+        difference: diff,
       });
     }
 
@@ -110,9 +107,9 @@ class ReceptionController {
 
     if (diff % RECEPTION_DURATION !== 0) {
 
-      throw new ServiceError({
-        message: 'Please provide reseptions interval, which can be divided by reception duration: ' + RECEPTION_DURATION,
-        data: {startInterval, endInterval,}
+      throw re('RESEPTION_INTERVAL', {
+        startInterval,
+        endInterval,
       });
     }
 

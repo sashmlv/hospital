@@ -32,6 +32,10 @@ test(`role.controller.create`, async t => {
   let data = await rc.create({name: 'name'});
   t.deepEqual(rm.create.callCount, 1);
   t.truthy(data.id);
+
+  let err = await t.throwsAsync(rc.create({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {name: undefined});
 });
 
 test(`role.controller.getRole`, async t => {
@@ -39,6 +43,10 @@ test(`role.controller.getRole`, async t => {
   let [data] = await rc.getRole({roleId: 1});
   t.deepEqual(rm.getRole.callCount, 1);
   t.deepEqual(+data.id, 1);
+
+  let err = await t.throwsAsync(rc.getRole({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {roleId: undefined});
 });
 
 test(`role.controller.update`, async t => {
@@ -46,6 +54,14 @@ test(`role.controller.update`, async t => {
   let data = await rc.update({roleId: 1, name: 'name'});
   t.deepEqual(rm.getRole.callCount, 1);
   t.truthy(data.id);
+
+  let err = await t.throwsAsync(rc.update({name: 'name'}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {roleId: undefined});
+
+  err = await t.throwsAsync(rc.update({roleId: 1}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {name: undefined});
 });
 
 test(`role.controller.delete`, async t => {
@@ -53,4 +69,8 @@ test(`role.controller.delete`, async t => {
   let data = await rc.delete({roleId: 1});
   t.deepEqual(rm.delete.callCount, 1);
   t.truthy(data.id);
+
+  let err = await t.throwsAsync(rc.delete({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {roleId: undefined});
 });

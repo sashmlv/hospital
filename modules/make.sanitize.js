@@ -1,6 +1,6 @@
 'use strict';
 
-const ServiceError = require('../libs/error'),
+const ServiceError = require('../libs/service.error'),
   stringify = require('./stringify'),
   gc = require('./get.class');
 
@@ -38,6 +38,7 @@ function makeSanitize(sanitizer) {
 
       throw new ServiceError({
         message: 'Field required: ' + emptyKey,
+        code: 'FIELD_REQUIRED',
         data: {[emptyKey]: data[emptyKey]},
       });
     }
@@ -53,6 +54,7 @@ function makeSanitize(sanitizer) {
 
         throw new ServiceError({
           message: 'Field is not allowed: ' + key,
+          code: 'FIELD_NOT_ALLOWED',
           data: {[key]: data[key]},
         });
       }
@@ -65,6 +67,7 @@ function makeSanitize(sanitizer) {
 
           throw new ServiceError({
             message: 'Field not valid: ' + key,
+            code: 'FIELD_NOT_VALID',
             data: {[key]: data[key]},
           });
         }

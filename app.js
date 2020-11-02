@@ -2,7 +2,7 @@
 
 const express = require('express'),
   app = express(),
-  ServiceError = require('./libs/error'),
+  ServiceError = require('./libs/service.error'),
   config = require('./libs/config'),
   log = require('./libs/logger'),
   router = require('./libs/router'),

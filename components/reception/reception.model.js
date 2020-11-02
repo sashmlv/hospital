@@ -1,7 +1,7 @@
 'use strict';
 
 const db = require('../../libs/db-sql'),
-  ServiceError = require('../../libs/error');
+  re = require('./reception.error');
 
 class ReceptionModel {
 
@@ -121,20 +121,14 @@ INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, recor
 
     if (!record) {
 
-      throw new ServiceError({
-        message: 'Reception not found',
-        data: {id}
-      });
+      throw re('RECEPTION_NOT_FOUND', {id});
     }
 
     const taken = record && record.patient_id && (record.patient_id !== patient_id);
 
     if (taken) {
 
-      throw new ServiceError({
-        message: 'Reception already taken',
-        data: {id: record.id}
-      });
+      throw re('RECEPTION_TAKEN', {id: record.id});
     }
 
     record.patient_id = +patient_id;

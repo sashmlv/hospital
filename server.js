@@ -8,7 +8,7 @@ const {
     HOST, PORT
   } = SERVER,
   log = require('./libs/logger'),
-  ServiceError = require('./libs/error');
+  ServiceError = require('./libs/service.error');
 
 module.exports = (async _=> {
 

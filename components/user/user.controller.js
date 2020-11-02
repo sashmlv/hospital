@@ -1,7 +1,6 @@
 'use strict';
 
 const rm = require('./user.model'),
-  ServiceError = require('../../libs/error'),
   sanitize = require('./user.sanitize');
 
 class UserController {

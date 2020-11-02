@@ -45,14 +45,14 @@ test(`stringify called`, t => {
 test(`field not allowed`, t => {
 
   const err = t.throws(_=> sanitize({abc: 'abc'}));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_NOT_ALLOWED');
   t.deepEqual(err.data.name, undefined);
 });
 
 test(`field required`, t => {
 
   const err = t.throws(_=> sanitize({name: undefined}, 'name'));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
   t.deepEqual(err.data.name, undefined);
 });
 

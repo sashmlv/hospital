@@ -125,19 +125,25 @@ test(`reception.model.updateByPatient`, async t => {
     ['2', '1', 'active', '1', 'active',]
   ]);
 
-  fakeDb.raw = _=> ({id: 10, patient_id: 3});
+  fakeDb.raw = _=> ({id: 1, patient_id: 3});
 
   let err = await t.throwsAsync(rm.updateByPatient({
-    id: '1',
+    id: 1,
     patient_id: '2',
     record_status: 'active',
   }));
 
-  t.deepEqual(err.code, 'SERVICE_ERROR'); // already taken
-  t.deepEqual(err.data, {id: 10});
+  t.deepEqual(err.code, 'RECEPTION_TAKEN');
+  t.deepEqual(err.data, {id: 1});
 
   fakeDb.raw = _=> (null);
 
-  t.deepEqual(err.code, 'SERVICE_ERROR'); // not found
-  t.deepEqual(err.data, {id: 10});
+  err = await t.throwsAsync(rm.updateByPatient({
+    id: 1,
+    patient_id: '2',
+    record_status: 'active',
+  }));
+
+  t.deepEqual(err.code, 'RECEPTION_NOT_FOUND');
+  t.deepEqual(err.data, {id: 1});
 });

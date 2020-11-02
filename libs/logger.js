@@ -5,7 +5,6 @@ const pino = require('pino'),
     PROD,
     LOG,
   } = require('./config'),
-  {ServiceError} = require('./error'),
   log = pino({
 
     level: LOG.LEVEL,

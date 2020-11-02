@@ -41,7 +41,7 @@ test(`user.controller.create`, async t => {
   t.deepEqual(um.create.callCount, 1);
   t.truthy(data.id);
 
-  let err = await t.throwsAsync(uc.create({ // roleId required
+  let err = await t.throwsAsync(uc.create({
     firstname: 'firstname',
     middlename: 'middlename',
     lastname: 'lastname',
@@ -49,10 +49,10 @@ test(`user.controller.create`, async t => {
     age: '10',
     phone: '+79001112233',
   }));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {roleId: undefined});
 
-  t.deepEqual(err.code, 'SERVICE_ERROR');
-
-  err = await t.throwsAsync(uc.create({ // firstname required
+  err = await t.throwsAsync(uc.create({
     roleId: '1',
     middlename: 'middlename',
     lastname: 'lastname',
@@ -60,9 +60,10 @@ test(`user.controller.create`, async t => {
     age: '10',
     phone: '+79001112233',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {firstname: undefined});
 
-  err = await t.throwsAsync(uc.create({ // middlename required
+  err = await t.throwsAsync(uc.create({
     roleId: '1',
     firstname: 'firstname',
     lastname: 'lastname',
@@ -70,9 +71,10 @@ test(`user.controller.create`, async t => {
     age: '10',
     phone: '+79001112233',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {middlename: undefined});
 
-  err = await t.throwsAsync(uc.create({ // lastname required
+  err = await t.throwsAsync(uc.create({
     roleId: '1',
     firstname: 'firstname',
     middlename: 'middlename',
@@ -80,9 +82,10 @@ test(`user.controller.create`, async t => {
     age: '10',
     phone: '+79001112233',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {lastname: undefined});
 
-  err = await t.throwsAsync(uc.create({ // gender required
+  err = await t.throwsAsync(uc.create({
     roleId: '1',
     firstname: 'firstname',
     middlename: 'middlename',
@@ -90,9 +93,10 @@ test(`user.controller.create`, async t => {
     age: '10',
     phone: '+79001112233',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {gender: undefined});
 
-  err = await t.throwsAsync(uc.create({ // age required
+  err = await t.throwsAsync(uc.create({
     roleId: '1',
     firstname: 'firstname',
     middlename: 'middlename',
@@ -100,9 +104,10 @@ test(`user.controller.create`, async t => {
     gender: 'male',
     phone: '+79001112233',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {age: undefined});
 
-  err = await t.throwsAsync(uc.create({ // phone required
+  err = await t.throwsAsync(uc.create({
     roleId: '1',
     firstname: 'firstname',
     middlename: 'middlename',
@@ -110,7 +115,8 @@ test(`user.controller.create`, async t => {
     gender: 'male',
     age: '10',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {phone: undefined});
 });
 
 test(`user.controller.getUser`, async t => {
@@ -119,8 +125,9 @@ test(`user.controller.getUser`, async t => {
   t.deepEqual(um.getUser.callCount, 1);
   t.deepEqual(+data.id, 1);
 
-  let err = await t.throwsAsync(uc.getUser({})); // userId required
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  let err = await t.throwsAsync(uc.getUser({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {userId: undefined});
 });
 
 test(`user.controller.update`, async t => {
@@ -129,8 +136,9 @@ test(`user.controller.update`, async t => {
   t.deepEqual(um.getUser.callCount, 1);
   t.truthy(data.id);
 
-  let err = await t.throwsAsync(uc.update({})); // userId required
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  let err = await t.throwsAsync(uc.update({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {userId: undefined});
 });
 
 test(`user.controller.delete`, async t => {
@@ -139,6 +147,7 @@ test(`user.controller.delete`, async t => {
   t.deepEqual(um.delete.callCount, 1);
   t.truthy(data.id);
 
-  let err = await t.throwsAsync(uc.getUser({})); // userId required
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  let err = await t.throwsAsync(uc.delete({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {userId: undefined});
 });

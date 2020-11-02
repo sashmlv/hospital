@@ -35,7 +35,7 @@ test(`reception.controller.createOrUpdate`, async t => {
     endTime: '06:50:00',
   }));
 
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'RECEPTION_DURATION');
   t.deepEqual(err.data.startTime, '06:00:00');
   t.deepEqual(err.data.endTime, '06:50:00');
   t.deepEqual(err.data.difference, 50);
@@ -49,69 +49,75 @@ test(`reception.controller.createOrUpdate`, async t => {
   t.deepEqual(rm.createOrUpdate.callCount, 1);
   t.truthy(data.id);
 
-  err = await t.throwsAsync(rc.createOrUpdate({ // doctorId required
+  err = await t.throwsAsync(rc.createOrUpdate({
     date: '2020-01-01',
     startTime: '06:00:00',
     endTime: `06:${APP.RECEPTION_DURATION}:00`,
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {doctorId: undefined});
 
-  err = await t.throwsAsync(rc.createOrUpdate({ // date required
+  err = await t.throwsAsync(rc.createOrUpdate({
     doctorId: '1',
     startTime: '06:00:00',
     endTime: `06:${APP.RECEPTION_DURATION}:00`,
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {date: undefined});
 
-  err = await t.throwsAsync(rc.createOrUpdate({ // startTime required
+  err = await t.throwsAsync(rc.createOrUpdate({
     doctorId: '1',
     date: '2020-01-01',
     endTime: `06:${APP.RECEPTION_DURATION}:00`,
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {startTime: undefined});
 
-  err = await t.throwsAsync(rc.createOrUpdate({ // endTime required
+  err = await t.throwsAsync(rc.createOrUpdate({
     doctorId: '1',
     date: '2020-01-01',
     startTime: '06:00:00',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {endTime: undefined});
 });
 
 test(`reception.controller.getReception`, async t => {
 
-  let [data] = await rc.getReception({receptionId: 1}); // success
+  let [data] = await rc.getReception({receptionId: 1});
   t.deepEqual(rm.getReception.callCount, 1);
   t.deepEqual(+data.id, 1);
 
-  let err = await t.throwsAsync(rc.getReception({})); // receptionId required
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  let err = await t.throwsAsync(rc.getReception({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {receptionId: undefined});
 });
 
 test(`reception.controller.delete`, async t => {
 
-  let data = await rc.delete({receptionId: 1}); // success
+  let data = await rc.delete({receptionId: 1});
   t.deepEqual(rm.delete.callCount, 1);
   t.truthy(data.id);
 
-  let err = await t.throwsAsync(rc.delete({})); // receptionId required
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  let err = await t.throwsAsync(rc.delete({}));
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {receptionId: undefined});
 });
 
 test(`reception.controller.createOrUpdateReceptionsInterval`, async t => {
 
-  let err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({ // bad duration interval
+  let err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({
     doctorId: '1',
     date: '2020-01-01',
     startInterval: '06:00:00',
     endInterval: '06:50:00',
   }));
 
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'RESEPTION_INTERVAL');
   t.deepEqual(err.data.startInterval, '06:00:00');
   t.deepEqual(err.data.endInterval, '06:50:00');
 
-  let data = await rc.createOrUpdateReceptionsInterval({ // success
+  let data = await rc.createOrUpdateReceptionsInterval({
     doctorId: '1',
     date: '2020-01-01',
     startInterval: '06:00:00',
@@ -127,38 +133,42 @@ test(`reception.controller.createOrUpdateReceptionsInterval`, async t => {
   t.deepEqual(data.ids[0].end_interval,`07:${APP.RECEPTION_DURATION}:00`);
   t.deepEqual(data.ids[0].intervals.length, 3);
 
-  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({ // doctorId required
+  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({
     date: '2020-01-01',
     startInterval: '06:00:00',
     endInterval: `07:${APP.RECEPTION_DURATION}:00`,
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {doctorId: undefined});
 
-  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({ // date required
+  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({
     doctorId: '1',
     startInterval: '06:00:00',
     endInterval: `07:${APP.RECEPTION_DURATION}:00`,
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {date: undefined});
 
-  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({ // startInterval required
+  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({
     doctorId: '1',
     date: '2020-01-01',
     endInterval: `07:${APP.RECEPTION_DURATION}:00`,
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {startInterval: undefined});
 
-  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({ // endInterval required
+  err = await t.throwsAsync(rc.createOrUpdateReceptionsInterval({
     doctorId: '1',
     date: '2020-01-01',
     startInterval: '06:00:00',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {endInterval: undefined});
 });
 
 test(`reception.controller.receptionTake`, async t => {
 
-  let [data] = await rc.receptionTake({ // success
+  let [data] = await rc.receptionTake({
     receptionId: '1',
     patientId: '1',
   });
@@ -167,13 +177,15 @@ test(`reception.controller.receptionTake`, async t => {
   t.deepEqual(data.id, '1');
   t.deepEqual(data.patient_id, '1');
 
-  let err = await t.throwsAsync(rc.receptionTake({ // receptionId required
+  let err = await t.throwsAsync(rc.receptionTake({
     patientId: '1',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {receptionId: undefined});
 
-  err = await t.throwsAsync(rc.receptionTake({ // patientId required
+  err = await t.throwsAsync(rc.receptionTake({
     receptionId: '1',
   }));
-  t.deepEqual(err.code, 'SERVICE_ERROR');
+  t.deepEqual(err.code, 'FIELD_REQUIRED');
+  t.deepEqual(err.data, {patientId: undefined});
 });
