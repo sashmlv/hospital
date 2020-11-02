@@ -37,7 +37,7 @@ test(`reception.model.createOrUpdate`, async t => {
   });
 
   t.deepEqual(storage.raw.shift(), `
-WITH cte AS (DELETE FROM receptions WHERE start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
+WITH cte AS (UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
 INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id`,
 );
 
