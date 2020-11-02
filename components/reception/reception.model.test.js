@@ -37,13 +37,14 @@ test(`reception.model.createOrUpdate`, async t => {
   });
 
   t.deepEqual(storage.raw.shift(), `
-WITH cte AS (UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
+WITH cte AS (UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND date = ? AND start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)
 INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id`,
 );
 
   t.deepEqual(storage.raw.shift(), [
     'deleted',
     '1',
+    '2020-01-01',
     '06:00:00',
     '06:00:00',
     '06:50:00',
@@ -90,10 +91,11 @@ test(`reception.model.createOrUpdateMany`, async t => {
   });
   t.deepEqual(storage.with.shift(), 'cte');
   t.deepEqual(storage.raw, [
-    'UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
+    'UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND date = ? AND start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?',
     [
       'deleted',
       '1',
+      '2020-01-01',
       '06:00:00',
       '06:00:00',
       '06:50:00',
