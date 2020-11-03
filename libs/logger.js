@@ -8,7 +8,12 @@ const pino = require('pino'),
   log = pino({
 
     level: LOG.LEVEL,
-    prettyPrint: PROD ? false : { colorize: true },
+    prettyPrint: PROD ?
+      false :
+      {
+        colorize: true,
+        errorProps: '*',
+      },
   });
 
 process.on('unhandledRejection', err => log.error(err))
