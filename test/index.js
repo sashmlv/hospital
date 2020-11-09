@@ -11,11 +11,11 @@ const commands = [
       arg: ['run', 'db:test:up'],
     },
     {
+      cmd: 'npm',
+      arg: ['run', 'migration:up'],
+    },
+    {
       cmd: `ava ${argv.join(' ')}`,
-      opt: {
-
-        always: false,
-      }
     },
     {
       cmd: 'npm',
