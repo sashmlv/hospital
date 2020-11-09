@@ -1,13 +1,17 @@
 'use strict';
 
 const {spawn} = require('child_process'),
-  commands = [
+  argv = process.argv.slice();
+
+argv.splice(0, 2);
+
+const commands = [
     {
       cmd: 'npm',
       arg: ['run', 'db:test:up'],
     },
     {
-      cmd: 'ava',
+      cmd: `ava ${argv.join(' ')}`,
       opt: {
 
         always: false,
