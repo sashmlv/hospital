@@ -44,10 +44,11 @@ const config = {
     USER: TEST ? env.DB_TEST_USER : env.DB_USER,
     PASSWORD: TEST ? env.DB_TEST_PASSWORD : env.DB_PASSWORD,
     DATABASE: TEST ? env.DB_TEST_NAME : env.DB_NAME,
-    DEBUG: env.DB_DEBUG === 'true',
+    DEBUG: TEST ? false : env.DB_DEBUG === 'true',
   },
   LOG: {
 
+    LOG: TEST ? false : true,
     LEVEL: env.LOG_LEVEL,
     PRETTY: env.LOG_PRETTY,
   },
