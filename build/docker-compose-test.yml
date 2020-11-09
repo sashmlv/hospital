@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  postgres-test:
+    image: postgres:13-alpine
+    volumes:
+      - $PWD/tmp/postgres-test:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_USER: user-test
+      POSTGRES_PASSWORD: password-test
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: hospital-test
+    ports:
+      - 5434:5432

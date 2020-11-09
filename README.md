@@ -1,4 +1,5 @@
 ### Hospital test.
+- install docker, docker-compose
 - npm install
 - npm run db:up
 - npm run migration:up

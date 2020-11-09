@@ -6,7 +6,6 @@
   "author": "",
   "license": "UNLICENSE",
   "scripts": {
-    "test": "ava",
     "start": "node server.js",
     "db:up": "docker-compose -f ./build/docker-compose.yml up --detach --build",
     "db:start": "docker-compose -f ./build/docker-compose.yml start",
@@ -14,7 +13,10 @@
     "db:down": "docker-compose -f ./build/docker-compose.yml down",
     "migration:up": "node ./migrations/up",
     "migration:down": "node ./migrations/down",
-    "seed": "node ./seeds"
+    "seed": "node ./seeds",
+    "test": "node ./test",
+    "db:test:up": "docker-compose -f ./build/docker-compose-test.yml up --detach --build",
+    "db:test:down": "docker-compose -f ./build/docker-compose-test.yml down --volumes"
   },
   "dependencies": {
     "date-fns": "^2.16.1",
@@ -42,7 +44,7 @@
       "modules/**/*.test.js"
     ],
     "verbose": true,
-    "timeout": "10s",
+    "timeout": "20s",
     "failFast": true,
     "serial": true
   }
