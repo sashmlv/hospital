@@ -1,31 +1,15 @@
 'use strict';
 
-const {spawn} = require('child_process'),
-  argv = process.argv.slice();
+const execute = require('./execute'),
+  commands = require('./commands'),
+  {
+    TEST,
+  } = require('../libs/config');
 
-argv.splice(0, 2);
+if (!TEST) {
 
-const commands = [
-    {
-      cmd: 'npm',
-      arg: ['run', 'db:test:up'],
-    },
-    {
-      cmd: 'npm',
-      arg: ['run', 'migration:up'],
-    },
-    {
-      cmd: `ava ${argv.join(' ')}`,
-    },
-    {
-      cmd: 'npm',
-      arg: ['run', 'db:test:down'],
-      opt: {
-
-        always: true,
-      }
-    }
-  ];
+  throw new Error('Please run test environment');
+}
 
 (async () => {
 
@@ -39,10 +23,18 @@ const commands = [
 
       opt.stdio = opt.hasOwnProperty('stdio') ? opt.stdio : 'inherit';
       opt.shell = opt.hasOwnProperty('shell') ? opt.shell : true;
+      opt.spawn = opt.hasOwnProperty('spawn') ? opt.spawn : true;
 
-      if ( ! isErr || opt.always ) {
+      const {always, spawn} = opt;
 
-        await execute(cmd, arg, opt);
+      if (!isErr || always) {
+
+        if (spawn) {
+          await execute(cmd, arg, opt);
+        }
+        else {
+          await cmd(arg);
+        }
       }
     }
     catch (e) {
@@ -51,39 +43,13 @@ const commands = [
       process.stdout.write(`${e}`);
     };
   };
+
+  if (isErr) {
+
+    process.exit(1);
+  }
+  else {
+
+    process.exit(0);
+  }
 })();
-
-function onExit(childProcess) {
-
-  return new Promise((resolve, reject) => {
-  });
-}
-
-/**
- * Execute command
- * @param {string} command
- * @param {array} arg
- * @param {object} opt
- * @return {object} Return child process
- **/
-function execute (task, arg, opt, wait) {
-
-  return new Promise((res, rej) => {
-
-    const child = spawn(task, arg, opt);
-
-    child.on('exit', code => {
-
-      if (code) {
-
-        rej(new Error('Exit with error code: ' + code));
-      }
-      res();
-    });
-
-    child.on('error', err => {
-
-      rej(err);
-    });
-  });
-};

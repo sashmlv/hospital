@@ -30,6 +30,7 @@ const config = {
   NODE_ENV: env.NODE_ENV,
   PROD,
   DEV,
+  TEST,
   SERVER: {
 
     HOST: env.HOST,
@@ -48,7 +49,7 @@ const config = {
   },
   LOG: {
 
-    LOG: TEST ? false : true,
+    ENABLED: true,
     LEVEL: env.LOG_LEVEL,
     PRETTY: env.LOG_PRETTY,
   },

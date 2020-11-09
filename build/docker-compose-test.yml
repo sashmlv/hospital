@@ -4,7 +4,7 @@ services:
   postgres-test:
     image: postgres:13-alpine
     volumes:
-      - $PWD/tmp/postgres-test:/var/lib/postgresql/data:rw
+      - $PWD/tmp/postgres-data-test:/var/lib/postgresql/data:rw
     environment:
       POSTGRES_USER: user-test
       POSTGRES_PASSWORD: password-test
