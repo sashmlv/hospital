@@ -19,13 +19,17 @@ if (result.error) {
   throw result.error;
 }
 
-module.exports = {
+const PROD = env.NODE_ENV === 'production',
+  DEV = env.NODE_ENV === 'development',
+  TEST = env.NODE_ENV === 'test';
+
+const config = {
 
   DEBUG: env.DEBUG,
   ROOT,
   NODE_ENV: env.NODE_ENV,
-  PROD: env.NODE_ENV === 'production',
-  DEV: env.NODE_ENV === 'development',
+  PROD,
+  DEV,
   SERVER: {
 
     HOST: env.HOST,
@@ -35,11 +39,11 @@ module.exports = {
 
     CLIENT: env.DB_CLIENT,
     VERSION: env.DB_VERSION,
-    HOST: env.DB_HOST,
-    PORT: env.DB_PORT,
-    USER: env.DB_USER,
-    PASSWORD: env.DB_PASSWORD,
-    DATABASE: env.DB_NAME,
+    HOST: TEST ? env.DB_TEST_HOST : env.DB_HOST,
+    PORT: TEST ? env.DB_TEST_PORT : env.DB_PORT,
+    USER: TEST ? env.DB_TEST_USER : env.DB_USER,
+    PASSWORD: TEST ? env.DB_TEST_PASSWORD : env.DB_PASSWORD,
+    DATABASE: TEST ? env.DB_TEST_NAME : env.DB_NAME,
     DEBUG: env.DB_DEBUG === 'true',
   },
   LOG: {
@@ -51,3 +55,5 @@ module.exports = {
     RECEPTION_DURATION: 30, // min
   }
 };
+
+module.exports = config;
