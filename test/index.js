@@ -1,6 +1,7 @@
 'use strict';
 
-const execute = require('./execute'),
+const log = require('../libs/logger'),
+  execute = require('./execute'),
   commands = require('./commands'),
   {
     TEST,
@@ -27,6 +28,10 @@ if (!TEST) {
 
       const {always, spawn} = opt;
 
+      const str = `${cmd}${arg ? (' ' + arg.join(' ')) : ''}${opt ? (' | ' + JSON.stringify(opt)) : ''}`;
+
+      log.info(str);
+
       if (!isErr || always) {
 
         if (spawn) {
@@ -37,10 +42,10 @@ if (!TEST) {
         }
       }
     }
-    catch (e) {
+    catch (err) {
 
       isErr = true;
-      process.stdout.write(`${e}`);
+      log.error(err);
     };
   };
 
