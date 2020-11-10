@@ -6,7 +6,7 @@ const db = require('../libs/db-sql'),
 argv.splice(0, 2);
 
 const commands = [
-  { /* npm run db:test:up */
+  { /* For db run execute in CLI: npm run db:test:up */
     msg: 'Check database connection',
     cmd: checkDbConnection,
     opt: {spawn: false}
