@@ -15,6 +15,7 @@
     "migration:down": "node ./migrations/down",
     "seed": "node ./seeds",
     "test": "cross-env NODE_ENV=test node ./test",
+    "test:dev": "cross-env NODE_ENV=test-dev node ./test",
     "db:test:up": "docker-compose -f ./build/docker-compose-test.yml up --detach --build",
     "db:test:down": "docker-compose -f ./build/docker-compose-test.yml down --volumes"
   },

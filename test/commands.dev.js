@@ -6,14 +6,9 @@ const db = require('../libs/db-sql'),
 argv.splice(0, 2);
 
 const commands = [
-  {
-    msg: 'Run database',
-    cmd: 'npm',
-    arg: ['run', 'db:test:up'],
-  },
-  {
-    msg: 'Wait database',
-    cmd: _=> new Promise(res => setTimeout(res, 3000)),
+  { /* npm run db:test:up */
+    msg: 'Check database connection',
+    cmd: checkDbConnection,
     opt: {spawn: false}
   },
   {
@@ -36,12 +31,24 @@ END; $$`),
     msg: 'Run tests',
     cmd: `ava ${argv.join(' ')}`,
   },
-  {
-    msg: 'Stop database',
-    cmd: 'npm',
-    arg: ['run', 'db:test:down'],
-    opt: {always: true}
-  }
 ];
+
+async function checkDbConnection() {
+
+  try {
+
+    await db.raw(`SELECT 1`);
+
+  }
+  catch (err) {
+
+    if (err.code === 'ECONNREFUSED') {
+
+      throw new Error('No database connection');
+    }
+
+    throw err;
+  }
+}
 
 module.exports = commands;

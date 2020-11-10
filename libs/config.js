@@ -21,7 +21,8 @@ if (result.error) {
 
 const PROD = env.NODE_ENV === 'production',
   DEV = env.NODE_ENV === 'development',
-  TEST = env.NODE_ENV === 'test';
+  TEST = env.NODE_ENV === 'test',
+  TEST_DEV = env.NODE_ENV === 'test-dev';
 
 const config = {
 
@@ -31,6 +32,7 @@ const config = {
   PROD,
   DEV,
   TEST,
+  TEST_DEV,
   SERVER: {
 
     HOST: env.HOST,
@@ -40,12 +42,12 @@ const config = {
 
     CLIENT: env.DB_CLIENT,
     VERSION: env.DB_VERSION,
-    HOST: TEST ? env.DB_TEST_HOST : env.DB_HOST,
-    PORT: TEST ? env.DB_TEST_PORT : env.DB_PORT,
-    USER: TEST ? env.DB_TEST_USER : env.DB_USER,
-    PASSWORD: TEST ? env.DB_TEST_PASSWORD : env.DB_PASSWORD,
-    DATABASE: TEST ? env.DB_TEST_NAME : env.DB_NAME,
-    DEBUG: TEST ? false : env.DB_DEBUG === 'true',
+    HOST: TEST || TEST_DEV ? env.DB_TEST_HOST : env.DB_HOST,
+    PORT: TEST || TEST_DEV ? env.DB_TEST_PORT : env.DB_PORT,
+    USER: TEST || TEST_DEV ? env.DB_TEST_USER : env.DB_USER,
+    PASSWORD: TEST || TEST_DEV ? env.DB_TEST_PASSWORD : env.DB_PASSWORD,
+    DATABASE: TEST || TEST_DEV? env.DB_TEST_NAME : env.DB_NAME,
+    DEBUG: TEST || TEST_DEV ? false : env.DB_DEBUG === 'true',
   },
   LOG: {
 

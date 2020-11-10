@@ -2,15 +2,27 @@
 
 const log = require('../libs/logger'),
   execute = require('./execute'),
-  commands = require('./commands'),
   {
+    DB,
     TEST,
+    TEST_DEV,
   } = require('../libs/config');
 
-if (!TEST) {
+if (!TEST && !TEST_DEV) {
 
   throw new Error('Please run test environment');
 }
+
+const ok = DB && DB.DATABASE && DB.DATABASE.includes('test');
+
+if (!ok) {
+
+  throw new Error('Database name does not contain word "test", please check database params');
+}
+
+const commands = TEST ? require('./commands') :
+  TEST_DEV ? require('./commands.dev') :
+  undefined;
 
 (async () => {
 
@@ -20,7 +32,7 @@ if (!TEST) {
 
     try {
 
-      const {cmd, arg, opt = {}} = commands[i];
+      const {msg, cmd, arg, opt = {}} = commands[i];
 
       opt.stdio = opt.hasOwnProperty('stdio') ? opt.stdio : 'inherit';
       opt.shell = opt.hasOwnProperty('shell') ? opt.shell : true;
@@ -28,11 +40,11 @@ if (!TEST) {
 
       const {always, spawn} = opt;
 
-      const str = `${cmd}${arg ? (' ' + arg.join(' ')) : ''}${opt ? (' | ' + JSON.stringify(opt)) : ''}`;
-
-      log.info(str);
-
       if (!isErr || always) {
+
+        if (msg) {
+          log.info(msg);
+        }
 
         if (spawn) {
           await execute(cmd, arg, opt);
