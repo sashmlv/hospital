@@ -6,5 +6,5 @@
 - ```npm run seed```
 - ```npm start```
 - api: ```http://localhost:3000```
-- api calls: ```http://localhost:3000/api```
+- swagger: ```http://localhost:3000/api```
 - test: ```npm test```
