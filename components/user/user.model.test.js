@@ -73,7 +73,19 @@ test(`user.model.create`, async t => {
     record_status: 'active'
   }));
 
-  t.deepEqual(err.code, '23503'); // role not present in table
+  t.deepEqual(err.code, '23503'); // role not present in table "roles"
+
+  err = await t.throwsAsync(_=> usm.create({
+    role_id: 1,
+    firstname: 'firstname',
+    middlename: 'middlename',
+    lastname: 'lastname',
+    gender: 'male',
+    age: 30,
+    phone: '+79001112233',
+    record_status: 'some'
+  }));
+  t.deepEqual(err.code, '23514'); // failing row contains some
 });
 
 test(`user.model.getUsers`, async t => {

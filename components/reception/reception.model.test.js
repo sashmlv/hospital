@@ -1,146 +1,286 @@
 'use strict';
 
 const test = require('ava'),
-  makeFakeDb = require('../../test/fake-db-sql'),
-  fakeDb = makeFakeDb(),
-  storage = {};
+  rom = require('../role/role.model'),
+  usm = require('../user/user.model'),
+  rem = require('./reception.model');
 
-fakeDb.setStorage(storage);
+/* create */
+test(`reception.model.createOrUpdate (create)`, async t => {
 
-/* replace 'db' cache for './reception.model' */
-delete require.cache[require.resolve('../../libs/db-sql')];
-require.cache[require.resolve('../../libs/db-sql')] = {
-  exports: fakeDb,
-};
+  let role = await rom.create({
 
-const rm = require('./reception.model');
-
-test(`reception.model.getReceptions`, async t => {
-
-  await rm.getReceptions({limit: 10, offset: 10});
-
-  t.deepEqual(storage.select.shift(), '*');
-  t.deepEqual(storage.from.shift(), 'receptions');
-  t.deepEqual(storage.orderBy.shift(), 'id');
-  t.deepEqual(storage.limit.shift(), 10);
-  t.deepEqual(storage.offset.shift(), 10);
-});
-
-test(`reception.model.createOrUpdate`, async t => {
-
-  await rm.createOrUpdate({
-    doctor_id: '1',
-    date: '2020-01-01',
-    start_time: '06:00:00',
-    end_time: '06:50:00',
+    name: 'role',
     record_status: 'active',
   });
 
-  t.deepEqual(storage.raw.shift(), `
-WITH cte AS (UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND date = ? AND (start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?))
-INSERT INTO receptions (doctor_id, patient_id, date, start_time, end_time, record_status) VALUES (?, ?, ?, ?, ?, ?) RETURNING *`,
-);
+  t.deepEqual(role.id, 1);
 
-  t.deepEqual(storage.raw.shift(), [
-    'deleted',
-    '1',
-    '2020-01-01',
-    '06:00:00',
-    '06:00:00',
-    '06:50:00',
-    '06:50:00',
-    '1',
-    null,
-    '2020-01-01',
-    '06:00:00',
-    '06:50:00',
-    'active',
-  ]);
-});
+  let user = await usm.create({
 
-test(`reception.model.getReception`, async t => {
-
-  await rm.getReception({id: 1});
-
-  t.deepEqual(storage.select.shift(), '*');
-  t.deepEqual(storage.from.shift(), 'receptions');
-  t.deepEqual(storage.where.shift().id, 1);
-});
-
-test(`reception.model.delete`, async t => {
-
-  await rm.delete({id: 1});
-
-  t.deepEqual(storage.model.shift(), 'receptions');
-  t.deepEqual(storage.update.shift().hasOwnProperty('record_status'), true);
-  t.deepEqual(storage.where.shift().id, 1);
-  t.deepEqual(storage.returning.shift(), '*');
-});
-
-test(`reception.model.createOrUpdateMany`, async t => {
-
-  await rm.createOrUpdateMany({
-    doctor_id: '1',
-    date: '2020-01-01',
-    start_interval: '06:00:00',
-    end_interval: '06:50:00',
-    intervals: [{
-      start_time: '06:00:00',
-      end_time: '06:30:00',
-    }],
+    role_id: 1,
+    firstname: 'firstname1',
+    middlename: 'middlename1',
+    lastname: 'lastname1',
+    gender: 'male',
+    age: 30,
+    phone: '+79001112233',
+    record_status: 'active',
   });
-  t.deepEqual(storage.with.shift(), 'cte');
-  t.deepEqual(storage.raw, [
-    'UPDATE receptions SET record_status = ? WHERE doctor_id = ? AND date = ? AND (start_time <= ? AND end_time > ? OR start_time < ? AND end_time >= ?)',
-    [
-      'deleted',
-      '1',
-      '2020-01-01',
-      '06:00:00',
-      '06:00:00',
-      '06:50:00',
-      '06:50:00',
-    ]
-  ]);
-  t.deepEqual(storage.insert.shift(), [{
+
+  t.deepEqual(user.id, 1);
+
+  let reception = await rem.createOrUpdate({
+
     doctor_id: '1',
-    patient_id: null,
     date: '2020-01-01',
     start_time: '06:00:00',
     end_time: '06:30:00',
     record_status: 'active',
-  }]);
-  t.deepEqual(storage.into.shift(), 'receptions');
-  t.deepEqual(storage.returning.shift(), '*');
+  });
+
+  t.deepEqual(reception.id, 1);
+  t.deepEqual(reception.doctor_id, 1);
+  t.deepEqual(reception.patient_id, null);
+  t.deepEqual(reception.date, new Date('2019-12-31T21:00:00.000Z'));
+  t.deepEqual(reception.start_time, '06:00:00');
+  t.deepEqual(reception.end_time, '06:30:00');
+  t.deepEqual(reception.record_status, 'active');
+
+  reception = await rem.createOrUpdate({
+
+    doctor_id: '1',
+    date: '2020-01-01',
+    start_time: '07:00:00',
+    end_time: '07:30:00',
+    record_status: 'active',
+  });
+
+  t.deepEqual(reception.id, 2);
+
+  reception = await rem.createOrUpdate({
+
+    doctor_id: '1',
+    date: '2020-01-01',
+    start_time: '08:00:00',
+    end_time: '08:30:00',
+    record_status: 'active',
+  });
+
+  t.deepEqual(reception.id, 3);
+
+  /* doctor_id is not present in table "users" */
+  let err = await t.throwsAsync(_=> rem.createOrUpdate({
+
+    doctor_id: '2',
+    date: '2020-01-01',
+    start_time: '06:00:00',
+    end_time: '06:50:00',
+    record_status: 'active',
+  }));
+
+  t.deepEqual(err.code, '23503');
+
+  /* failing row contains some */
+  err = await t.throwsAsync(_=> rem.createOrUpdate({
+
+    doctor_id: '1',
+    date: '2020-01-01',
+    start_time: '06:00:00',
+    end_time: '06:50:00',
+    record_status: 'some',
+  }));
+
+  t.deepEqual(err.code, '23514');
+});
+
+test(`reception.model.getReceptions`, async t => {
+
+  let reception = await rem.getReceptions({
+
+    limit: 10,
+    offset: 0,
+    record_status: 'active',
+  });
+
+  t.deepEqual(reception.length, 3);
+  t.deepEqual(reception[0].start_time, '06:00:00');
+  t.deepEqual(reception[1].start_time, '07:00:00');
+  t.deepEqual(reception[2].start_time, '08:00:00');
+
+  reception = await rem.getReceptions({
+
+    limit: 1,
+    offset: 1,
+    record_status: 'active',
+  });
+
+  t.deepEqual(reception.start_time, '07:00:00');
+});
+
+test(`reception.model.getReception`, async t => {
+
+  let reception = await rem.getReception({id: 1, record_status: 'active'});
+
+  t.deepEqual(reception.id, 1);
+  t.deepEqual(reception.start_time, '06:00:00');
+});
+
+/* update */
+test(`reception.model.createOrUpdate (update)`, async t => {
+
+  /* update first reception (with id 1) */
+  let reception = await rem.createOrUpdate({
+
+    doctor_id: '1',
+    date: '2020-01-01',
+    start_time: '06:10:00',
+    end_time: '06:40:00',
+    record_status: 'active',
+  });
+
+  t.deepEqual(reception.start_time, '06:10:00');
+  t.deepEqual(reception.end_time, '06:40:00');
+
+  /* replaceed by new */
+  reception = await rem.getReception({id: 1, record_status: 'active'});
+
+  t.deepEqual(reception, null);
+});
+
+test(`reception.model.delete`, async t => {
+
+  let reception = await rem.delete({id: 2, record_status: 'deleted'});
+
+  t.deepEqual(reception.id, 2);
+  t.deepEqual(reception.start_time, '07:00:00');
+
+  reception = await rem.getReception({id: 2, record_status: 'active'});
+
+  t.deepEqual(reception, null);
+});
+
+test(`reception.model.createOrUpdateMany`, async t => {
+
+  let receptions = await rem.createOrUpdateMany({
+
+    doctor_id: '1',
+    date: '2020-01-01',
+    start_interval: '06:00:00',
+    end_interval: '07:00:00',
+    intervals: [
+      {
+        start_time: '06:00:00',
+        end_time: '06:30:00',
+      },
+      {
+        start_time: '06:30:00',
+        end_time: '07:00:00',
+      },
+    ],
+  });
+
+  t.deepEqual(receptions.length, 2);
+  t.deepEqual(receptions[0].id, 7);
+  t.deepEqual(receptions[0].doctor_id, 1);
+  t.deepEqual(receptions[0].patient_id, null);
+  t.deepEqual(receptions[0].date, new Date('2019-12-31T21:00:00.000Z'));
+  t.deepEqual(receptions[0].start_time, '06:00:00');
+  t.deepEqual(receptions[0].end_time, '06:30:00');
+  t.deepEqual(receptions[0].record_status, 'active');
+  t.deepEqual(receptions[1].id, 8);
+  t.deepEqual(receptions[1].doctor_id, 1);
+  t.deepEqual(receptions[1].patient_id, null);
+  t.deepEqual(receptions[1].date, new Date('2019-12-31T21:00:00.000Z'));
+  t.deepEqual(receptions[1].start_time, '06:30:00');
+  t.deepEqual(receptions[1].end_time, '07:00:00');
+  t.deepEqual(receptions[1].record_status, 'active');
+
+  receptions = await rem.createOrUpdateMany({
+
+    doctor_id: '1',
+    date: '2020-01-01',
+    start_interval: '06:10:00',
+    end_interval: '07:10:00',
+    intervals: [
+      {
+        start_time: '06:10:00',
+        end_time: '06:40:00',
+      },
+      {
+        start_time: '06:40:00',
+        end_time: '07:10:00',
+      },
+    ],
+  });
+
+  t.deepEqual(receptions.length, 2);
+  t.deepEqual(receptions[0].id, 9);
+  t.deepEqual(receptions[0].doctor_id, 1);
+  t.deepEqual(receptions[0].patient_id, null);
+  t.deepEqual(receptions[0].date, new Date('2019-12-31T21:00:00.000Z'));
+  t.deepEqual(receptions[0].start_time, '06:10:00');
+  t.deepEqual(receptions[0].end_time, '06:40:00');
+  t.deepEqual(receptions[0].record_status, 'active');
+  t.deepEqual(receptions[1].id, 10);
+  t.deepEqual(receptions[1].doctor_id, 1);
+  t.deepEqual(receptions[1].patient_id, null);
+  t.deepEqual(receptions[1].date, new Date('2019-12-31T21:00:00.000Z'));
+  t.deepEqual(receptions[1].start_time, '06:40:00');
+  t.deepEqual(receptions[1].end_time, '07:10:00');
+  t.deepEqual(receptions[1].record_status, 'active');
+
+  /* replaced receptions */
+  let reception = await rem.getReception({id: 7, record_status: 'active'});
+
+  t.deepEqual(reception, null);
+
+  reception = await rem.getReception({id: 8, record_status: 'active'});
+
+  t.deepEqual(reception, null);
 });
 
 test(`reception.model.updateByPatient`, async t => {
 
-  await rm.updateByPatient({
-    id: '1',
-    patient_id: '2',
+  let reception = await rem.updateByPatient({
+
+    id: '3',
+    patient_id: '1',
     record_status: 'active',
   });
 
-  t.deepEqual(storage.raw, [
-    'WITH cte AS (UPDATE receptions SET patient_id = ? WHERE id = ? AND patient_id IS NULL AND record_status = ?) SELECT * FROM receptions WHERE id = ? AND record_status = ?',
-    ['2', '1', 'active', '1', 'active',]
-  ]);
+  t.deepEqual(reception.id, 3);
+  t.deepEqual(reception.doctor_id, 1);
+  t.deepEqual(reception.patient_id, 1);
+  t.deepEqual(reception.date, new Date('2019-12-31T21:00:00.000Z'));
+  t.deepEqual(reception.start_time, '08:00:00');
+  t.deepEqual(reception.end_time, '08:30:00');
+  t.deepEqual(reception.record_status, 'active');
 
-  fakeDb.raw = _=> ({id: 1, patient_id: 3});
+  let user = await usm.create({
 
-  let err = await t.throwsAsync(rm.updateByPatient({
-    id: 1,
+    role_id: 1,
+    firstname: 'firstname2',
+    middlename: 'middlename2',
+    lastname: 'lastname2',
+    gender: 'male',
+    age: 30,
+    phone: '+79001112233',
+    record_status: 'active',
+  });
+
+  t.deepEqual(user.id, 2);
+
+  let err = await t.throwsAsync(rem.updateByPatient({
+    id: '3',
     patient_id: '2',
     record_status: 'active',
   }));
 
   t.deepEqual(err.code, 'RECEPTION_TAKEN');
-  t.deepEqual(err.data, {id: 1});
+  t.deepEqual(err.data, {id: 3});
 
-  fakeDb.raw = _=> (null);
-
-  err = await t.throwsAsync(rm.updateByPatient({
+  err = await t.throwsAsync(rem.updateByPatient({
     id: 1,
     patient_id: '2',
     record_status: 'active',
