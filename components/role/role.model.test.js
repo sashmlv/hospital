@@ -1,7 +1,12 @@
 'use strict';
 
 const test = require('ava'),
+  db = require('../../libs/db-sql'),
   rom = require('./role.model');
+
+test.before(async t => await db.raw(`
+TRUNCATE roles RESTART IDENTITY CASCADE
+`));
 
 test(`role.model.create`, async t => {
 
