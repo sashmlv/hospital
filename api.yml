@@ -4,7 +4,7 @@ info:
   description: api
   version: 0.0.1
 servers:
-  - url: http://0.0.0.0:3000
+  - url: http://localhost:3000
     description: api
 tags:
   - name: api

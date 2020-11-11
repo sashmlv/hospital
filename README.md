@@ -5,6 +5,6 @@
 - ```npm run migration:up```
 - ```npm run seed```
 - ```npm start```
-- api: ```http://0.0.0.0:3000```
-- api calls: ```http://0.0.0.0:3000/api``` (not ```localhost```)
+- api: ```http://localhost:3000```
+- api calls: ```http://localhost:3000/api```
 - test: ```npm test```
