@@ -1,7 +1,8 @@
 version: "3.8"
 
 services:
-  postgres-test:
+  postgres:
+    container_name: hospital-test-postgres
     image: postgres:13-alpine
     volumes:
       - $PWD/tmp/postgres-data-test:/var/lib/postgresql/data:rw
