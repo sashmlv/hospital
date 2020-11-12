@@ -1,4 +1,5 @@
 **/node_modules
 package-lock.json
-tmp/postgres
-tmp/postgres-test
+docker/postgres-data
+docker/postgres-data-test
+tmp
